@@ -429,3 +429,16 @@ export type AnyU8a = Uint8Array | number[] | string;
 export type ContractFunction<T = any> = ( // eslint-disable-line  @typescript-eslint/no-explicit-any
   ...args: any[] // eslint-disable-line  @typescript-eslint/no-explicit-any
 ) => Promise<T>;
+
+//playground creation related
+export interface Property {
+  name: string
+  type: string
+  modifiers?: string[]
+}
+
+export interface Structure {
+  kind: string
+  name: string
+  properties?: Property[]
+}

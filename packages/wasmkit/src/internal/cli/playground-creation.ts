@@ -3,7 +3,7 @@ import * as fs from "fs";
 // import fsExtra from "fs-extra";
 import path from "path";
 import * as ts from "typescript";
-
+import { Structure, Property } from "../../types";
 import { initialize } from "./initialize-playground";
 
 export function printSuggestedCommands (projectName: string): void {
@@ -34,18 +34,6 @@ function createArtifactJson (contractDir: string, destinationDir: string): void 
   fs.writeFileSync(dest, JSON.stringify(json)); // Write the JSON file to disk
 }
 
-interface Property {
-  name: string
-  type: string
-  modifiers?: string[]
-}
-
-interface Structure {
-  kind: string
-  name: string
-  properties?: Property[]
-}
-
 function convertTypescriptFileToJson (
   inputFilePath: string,
   outputFilePath: string
@@ -55,29 +43,11 @@ function convertTypescriptFileToJson (
     fs.readFileSync(inputFilePath).toString(),
     ts.ScriptTarget.Latest
   );
-
   const structures: Structure[] = [];
 
   function parseNode (node: ts.Node): void {
-    if (ts.isFunctionOrConstructorTypeNode(node)) {
-      console.log("\n In parsenode");
-      // console.log(JSON.stringify(node.name,null,2));
-    }
-    if (ts.isClassDeclaration(node)) {
-      const properties: Property[] = node.members
-        .filter(ts.isPropertyDeclaration)
-        .map((member) => ({
-          name: member.name.getText(sourceFile),
-          type: member.type?.getText(sourceFile) ?? "unknown",
-          modifiers: member.modifiers?.map((modifier) => modifier.getText(sourceFile))
-        }));
-      // console.log(JSON.stringify(node.members, null, 2));
-      structures.push({
-        kind: "class",
-        name: node.name?.getText(sourceFile) ?? "unknown",
-        properties
-      });
-    } else if (ts.isInterfaceDeclaration(node)) {
+   
+   if (ts.isInterfaceDeclaration(node)) {
       const properties: Property[] = node.members
         .filter(ts.isPropertySignature)
         .map((member) => ({
@@ -90,24 +60,25 @@ function convertTypescriptFileToJson (
         name: node.name?.getText(sourceFile) ?? "unknown",
         properties
       });
-    } else if (ts.isTypeAliasDeclaration(node)) {
-      structures.push({
-        kind: "typeAlias",
-        name: node.name?.getText(sourceFile) ?? "unknown",
-        properties: [
-          {
-            name: "type",
-            type: node.type?.getText(sourceFile) ?? "unknown"
-          }
-        ]
-      });
-    }
+    } 
     ts.forEachChild(node, parseNode);
   }
 
   parseNode(sourceFile);
 
   fs.writeFileSync(outputFilePath, JSON.stringify(structures, null, 2));
+}
+function processFilesInFolder(folderPath: string, destPath: string) {
+  const files = fs.readdirSync(folderPath);
+
+    files.forEach(file => {
+      const filePath = path.join(folderPath,file);
+      const fileName = path.parse(file).name;
+      const schemaDest = path.join(destPath,fileName+".json");
+      console.log(schemaDest);
+      convertTypescriptFileToJson(filePath, schemaDest);
+    });
+  
 }
 
 export async function createPlayground (
@@ -133,20 +104,22 @@ export async function createPlayground (
     });
 
     const playground = path.join(currDir, "playground");
-    const playgroundP = path.join(playground, "src");
-    // const playgroundPages = path.join(playgroundP, "pages");
+    const playgroundDest = path.join(playground, "src");
+    const schemaDest = path.join(playgroundDest,"schema"); //here contract name is stored.
     const contracts = path.join(artifacts, "contracts");
-    // const files = readDirectory(contracts);
+   
 
-    createArtifactJson(contracts, playgroundP);
+    createArtifactJson(contracts, playgroundDest);
+    const contractsSchema = path.join(artifacts, "typescript_schema");
 
-    const tyCounter = path.join(artifacts, "typescript_schema");
-    const count = path.join(tyCounter, "Counter.ts");
-    // const counter = fs.readFileSync(count, "utf8");
-    // const jobj = JSON.stringify(counter);
-    const dest = path.join(playgroundP, "counterInf.json");
-    convertTypescriptFileToJson(count, dest);
-    // console.log(jobj);
+    fs.mkdir(schemaDest, { recursive: true }, (err) => {
+      if (err) {
+        console.error('Error creating folder:', err);
+      } else {
+        console.log('Folder created successfully!');
+      }
+    });
+    processFilesInFolder(contractsSchema,schemaDest);
     return;
   }
 
