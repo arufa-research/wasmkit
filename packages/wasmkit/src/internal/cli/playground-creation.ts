@@ -4,6 +4,8 @@ import * as fs from "fs";
 import path from "path";
 import * as ts from "typescript";
 import { Structure, Property } from "../../types";
+import { WasmkitError } from "../core/errors";
+import { ERRORS } from "../core/errors-list";
 import { initialize } from "./initialize-playground";
 
 export function printSuggestedCommands (projectName: string): void {
@@ -46,21 +48,45 @@ function convertTypescriptFileToJson (
   const structures: Structure[] = [];
 
   function parseNode (node: ts.Node): void {
-   
-   if (ts.isInterfaceDeclaration(node)) {
+    if (ts.isClassDeclaration(node)) {
+      const properties: Property[] = node.members
+        .filter(ts.isPropertyDeclaration)
+        .map((member) => ({
+          name: member.name.getText(sourceFile),
+          type: member.type?.getText(sourceFile) || "unknown",
+          modifiers: member.modifiers?.map((modifier) => modifier.getText(sourceFile)),
+        }));
+      structures.push({
+        kind: "class",
+        name: node.name?.getText(sourceFile) || "unknown",
+        properties,
+      });
+    } else if (ts.isInterfaceDeclaration(node)) {
       const properties: Property[] = node.members
         .filter(ts.isPropertySignature)
         .map((member) => ({
           name: member.name.getText(sourceFile),
-          type: member.type?.getText(sourceFile) ?? "unknown",
-          modifiers: member.modifiers?.map((modifier) => modifier.getText(sourceFile))
+          type: member.type?.getText(sourceFile) || "unknown",
+          modifiers: member.modifiers?.map((modifier) => modifier.getText(sourceFile)),
         }));
       structures.push({
         kind: "interface",
-        name: node.name?.getText(sourceFile) ?? "unknown",
-        properties
+        name: node.name?.getText(sourceFile) || "unknown",
+        properties,
       });
-    } 
+    } else if (ts.isTypeAliasDeclaration(node)) {
+      structures.push({
+        kind: "typeAlias",
+        name: node.name?.getText(sourceFile) || "unknown",
+        properties: [
+          {
+            name: "type",
+            type: node.type?.getText(sourceFile) || "unknown",
+          },
+        ],
+      });
+    }
+   
     ts.forEachChild(node, parseNode);
   }
 
@@ -91,8 +117,11 @@ export async function createPlayground (
     const currDir = process.cwd();
     const artifacts = path.join(currDir, "artifacts");
     if (!fs.existsSync(artifacts)) {
-      console.log("no artifacts found");
-      return;
+      // console.log("no artifacts found");
+      // return;
+      throw new WasmkitError(ERRORS.GENERAL.ARTIFACTS_NOT_FOUND, {
+
+      });
     }
 
     const projectPath = path.join(currDir, projectName);
