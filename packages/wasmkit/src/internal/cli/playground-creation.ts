@@ -24,7 +24,6 @@ export function printSuggestedCommands (projectName: string): void {
 function createArtifactJson (contractDir: string, destinationDir: string): void {
   const files = fs.readdirSync(contractDir); // Get an array of all files in the directory
   const json = [];
-  console.log("\n", files);
   for (const file of files) {
     if (file.endsWith(".wasm") && (!file.endsWith("_compressed.wasm"))) {
       const name = file.slice(0, -5); // Remove the last 5 characters (".wasm") from the filename

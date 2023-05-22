@@ -1192,7 +1192,7 @@ If you aren't overriding compilation-related tasks, please report this as a bug.
     },
     ARTIFACTS_NOT_CREATED: {
       number: 1008,
-      message: 'Artifacts not created.',
+      message: 'Artifacts not created. First compile the contracts.',
       title: 'Artifacts not created.',
       description: `You are trying to create playground without compiling the contracts.
 
