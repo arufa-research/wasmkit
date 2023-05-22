@@ -1189,6 +1189,15 @@ If you aren't overriding compilation-related tasks, please report this as a bug.
 
 If you aren't overriding compilation-related tasks, please report this as a bug.`,
       shouldBeReported: true
+    },
+    ARTIFACTS_NOT_CREATED: {
+      number: 1008,
+      message: 'Artifacts not created.',
+      title: 'Artifacts not created.',
+      description: `You are trying to create playground without compiling the contracts.
+
+You can learn how to use WasmKit by reading the [Getting Started guide](../getting-started).`,
+      shouldBeReported: false
     }
   },
   CONTRACT_NAMES: {
