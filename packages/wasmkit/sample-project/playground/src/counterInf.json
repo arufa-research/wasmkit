@@ -1,0 +1,637 @@
+{
+"counter": [
+  {
+    "kind": "interface",
+    "name": "Constants",
+    "properties": [
+      {
+        "name": "count",
+        "type": "number"
+      },
+      {
+        "name": "owner",
+        "type": "string"
+      }
+    ]
+  },
+  {
+    "kind": "interface",
+    "name": "CountResponse",
+    "properties": [
+      {
+        "name": "count",
+        "type": "number"
+      }
+    ]
+  },
+  {
+    "kind": "typeAlias",
+    "name": "ExecuteMsg",
+    "properties": [
+      {
+        "name": "type",
+        "type": "{\n  increment: {\n    [k: string]: unknown;\n  };\n} | {\n  reset: {\n    count: number;\n    [k: string]: unknown;\n  };\n}"
+      }
+    ]
+  },
+  {
+    "kind": "interface",
+    "name": "InstantiateMsg",
+    "properties": [
+      {
+        "name": "count",
+        "type": "number"
+      }
+    ]
+  },
+  {
+    "kind": "typeAlias",
+    "name": "QueryMsg",
+    "properties": [
+      {
+        "name": "type",
+        "type": "{\n  get_count: {\n    [k: string]: unknown;\n  };\n}"
+      }
+    ]
+  },
+  {
+    "kind": "interface",
+    "name": "CounterReadOnlyInterface",
+    "properties": [
+      {
+        "name": "getCount",
+        "type": "() => Promise<any>"
+      }
+    ]
+  },
+  {
+    "kind": "class",
+    "name": "CounterQueryContract",
+    "properties": [
+      {
+        "name": "getCount",
+        "type": "unknown"
+      }
+    ]
+  },
+  {
+    "kind": "interface",
+    "name": "CounterInterface",
+    "properties": [
+      {
+        "name": "increment",
+        "type": "({\n    account,\n    customFees,\n    memo,\n    transferAmount\n  }: {\n    account: junokitTypes.UserAccount;\n    customFees?: junokitTypes.TxnStdFee;\n    memo?: string;\n    transferAmount?: readonly Coin[];\n  }) => Promise<ExecuteResult>"
+      },
+      {
+        "name": "reset",
+        "type": "({\n    account,\n    customFees,\n    memo,\n    transferAmount\n  }: {\n    account: junokitTypes.UserAccount;\n    customFees?: junokitTypes.TxnStdFee;\n    memo?: string;\n    transferAmount?: readonly Coin[];\n  }, {\n    count\n  }: {\n    count: number;\n  }) => Promise<ExecuteResult>"
+      }
+    ]
+  },
+  {
+    "kind": "class",
+    "name": "CounterContract",
+    "properties": [
+      {
+        "name": "increment",
+        "type": "unknown"
+      },
+      {
+        "name": "reset",
+        "type": "unknown"
+      }
+    ]
+  }
+],
+"staking": [
+  
+  {
+    "kind": "typeAlias",
+    "name": "ExecuteMsg",
+    "properties": [
+      {
+        "name": "type",
+        "type": "{\n  stake: {\n    referral: number;\n    [k: string]: unknown;\n  };\n} | {\n  stake_for_bjuno: {\n    referral: number;\n    [k: string]: unknown;\n  };\n} | {\n  claim: {\n    [k: string]: unknown;\n  };\n} | {\n  claim_and_stake: {\n    [k: string]: unknown;\n  };\n} | {\n  update_sejuno_addr: {\n    address: Addr;\n    [k: string]: unknown;\n  };\n} | {\n  update_bjuno_addr: {\n    address: Addr;\n    [k: string]: unknown;\n  };\n} | {\n  update_validator_set_addr: {\n    address: Addr;\n    [k: string]: unknown;\n  };\n} | {\n  update_rewards_addr: {\n    address: Addr;\n    [k: string]: unknown;\n  };\n} | {\n  receive: Cw20ReceiveMsg;\n} | {\n  advance_window: {\n    [k: string]: unknown;\n  };\n} | {\n  rebalance_slash: {\n    [k: string]: unknown;\n  };\n} | {\n  pause_contract: {\n    [k: string]: unknown;\n  };\n} | {\n  unpause_contract: {\n    [k: string]: unknown;\n  };\n} | {\n  vote_on_chain: {\n    proposal: number;\n    vote: VoteOption;\n    [k: string]: unknown;\n  };\n} | {\n  remove_validator: {\n    address: string;\n    redelegate?: boolean | null;\n    [k: string]: unknown;\n  };\n} | {\n  add_validator: {\n    address: Addr;\n    [k: string]: unknown;\n  };\n} | {\n  redelegate: {\n    from: string;\n    to: string;\n    [k: string]: unknown;\n  };\n} | {\n  change_owner: {\n    new_owner: Addr;\n    [k: string]: unknown;\n  };\n} | {\n  recover_juno: {\n    amount: Uint128;\n    denom: string;\n    to: string;\n    [k: string]: unknown;\n  };\n} | {\n  kill_switch_unbond: {\n    [k: string]: unknown;\n  };\n} | {\n  kill_switch_open_withdraws: {\n    [k: string]: unknown;\n  };\n} | {\n  change_unbonding_time: {\n    new_time: number;\n    [k: string]: unknown;\n  };\n} | {\n  change_dev_fee: {\n    dev_address?: Addr | null;\n    dev_fee?: number | null;\n    [k: string]: unknown;\n  };\n} | {\n  change_peg_recovery_fee: {\n    peg_recovery_fee: number;\n    [k: string]: unknown;\n  };\n} | {\n  change_threshold: {\n    er_threshold: number;\n    [k: string]: unknown;\n  };\n} | {\n  claim_airdrop1: {\n    address: Addr;\n    amount: Uint128;\n    proof: string[];\n    stage: number;\n    [k: string]: unknown;\n  };\n} | {\n  claim_airdrop2: {\n    address: Addr;\n    amount: Uint128;\n    proof: string[];\n    [k: string]: unknown;\n  };\n} | {\n  claim_airdrop3: {\n    address: Addr;\n    [k: string]: unknown;\n  };\n} | {\n  claim_reward: {\n    [k: string]: unknown;\n  };\n} | {\n  change_referral_contract: {\n    referral_contract: Addr;\n    [k: string]: unknown;\n  };\n} | {\n  remove_old_window_data: {\n    window: number;\n    [k: string]: unknown;\n  };\n} | {\n  remove_old_claim_data: {\n    [k: string]: unknown;\n  };\n} | {\n  remove_old_queue_data: {\n    [k: string]: unknown;\n  };\n}"
+      }
+    ]
+  },
+  {
+    "kind": "typeAlias",
+    "name": "Addr",
+    "properties": [
+      {
+        "name": "type",
+        "type": "string"
+      }
+    ]
+  },
+  {
+    "kind": "typeAlias",
+    "name": "Uint128",
+    "properties": [
+      {
+        "name": "type",
+        "type": "string"
+      }
+    ]
+  },
+  {
+    "kind": "typeAlias",
+    "name": "Binary",
+    "properties": [
+      {
+        "name": "type",
+        "type": "string"
+      }
+    ]
+  },
+  {
+    "kind": "typeAlias",
+    "name": "VoteOption",
+    "properties": [
+      {
+        "name": "type",
+        "type": "\"yes\" | \"no\" | \"abstain\" | \"no_with_veto\""
+      }
+    ]
+  },
+  {
+    "kind": "interface",
+    "name": "Cw20ReceiveMsg",
+    "properties": [
+      {
+        "name": "amount",
+        "type": "Uint128"
+      },
+      {
+        "name": "msg",
+        "type": "Binary"
+      },
+      {
+        "name": "sender",
+        "type": "string"
+      }
+    ]
+  },
+  {
+    "kind": "interface",
+    "name": "InstantiateMsg",
+    "properties": [
+      {
+        "name": "dev_address",
+        "type": "Addr"
+      },
+      {
+        "name": "dev_fee",
+        "type": "number | null"
+      },
+      {
+        "name": "epoch_period",
+        "type": "number"
+      },
+      {
+        "name": "er_threshold",
+        "type": "number"
+      },
+      {
+        "name": "peg_recovery_fee",
+        "type": "number"
+      },
+      {
+        "name": "reward_denom",
+        "type": "string"
+      },
+      {
+        "name": "unbonding_period",
+        "type": "number"
+      },
+      {
+        "name": "underlying_coin_denom",
+        "type": "string"
+      }
+    ]
+  },
+  {
+    "kind": "interface",
+    "name": "PendingClaimsResponse",
+    "properties": [
+      {
+        "name": "claim_time",
+        "type": "number"
+      },
+      {
+        "name": "juno_amount",
+        "type": "Uint128"
+      },
+      {
+        "name": "window_id",
+        "type": "number"
+      }
+    ]
+  },
+  {
+    "kind": "typeAlias",
+    "name": "QueryMsg",
+    "properties": [
+      {
+        "name": "type",
+        "type": "{\n  sejuno_exchange_rate: {\n    [k: string]: unknown;\n  };\n} | {\n  bjuno_exchange_rate: {\n    [k: string]: unknown;\n  };\n} | {\n  query_dev_fee: {\n    [k: string]: unknown;\n  };\n} | {\n  info: {\n    [k: string]: unknown;\n  };\n} | {\n  undelegations: {\n    address: Addr;\n    [k: string]: unknown;\n  };\n} | {\n  user_claimable: {\n    address: Addr;\n    [k: string]: unknown;\n  };\n} | {\n  window: {\n    [k: string]: unknown;\n  };\n} | {\n  validator_list: {\n    [k: string]: unknown;\n  };\n} | {\n  active_unbonding: {\n    address: Addr;\n    [k: string]: unknown;\n  };\n}"
+      }
+    ]
+  },
+  {
+    "kind": "typeAlias",
+    "name": "QueryResponse",
+    "properties": [
+      {
+        "name": "type",
+        "type": "{\n  info: {\n    admin: Addr;\n    bjuno_backing: Uint128;\n    bjuno_in_contract: Uint128;\n    bjuno_to_burn: Uint128;\n    bjuno_token: Addr;\n    dev_address: Addr;\n    dev_fee: number;\n    epoch_period: number;\n    er_threshold: number;\n    juno_under_withdraw: Uint128;\n    kill_switch: number;\n    peg_recovery_fee: number;\n    reward_denom: string;\n    rewards_contract: Addr;\n    sejuno_backing: Uint128;\n    sejuno_in_contract: Uint128;\n    sejuno_to_burn: Uint128;\n    sejuno_token: Addr;\n    to_deposit: Uint128;\n    top_validator_contract: Addr;\n    total_staked: Uint128;\n    unbonding_period: number;\n    underlying_coin_denom: string;\n    validator_set: ValidatorResponse[];\n    [k: string]: unknown;\n  };\n} | {\n  pending_claims: {\n    pending: PendingClaimsResponse[];\n    [k: string]: unknown;\n  };\n} | {\n  active_undelegation: {\n    bjuno_amount: Uint128;\n    sejuno_amount: Uint128;\n    [k: string]: unknown;\n  };\n} | {\n  top_validators: {\n    validators: string[];\n    [k: string]: unknown;\n  };\n} | {\n  sejuno_exchange_rate: {\n    denom: string;\n    rate: string;\n    [k: string]: unknown;\n  };\n} | {\n  bjuno_exchange_rate: {\n    denom: string;\n    rate: string;\n    [k: string]: unknown;\n  };\n} | {\n  dev_fee: {\n    address: Addr;\n    fee: number;\n    [k: string]: unknown;\n  };\n} | {\n  window: {\n    bjuno_amount: Uint128;\n    id: number;\n    sejuno_amount: Uint128;\n    time_to_close: number;\n    [k: string]: unknown;\n  };\n} | {\n  unbonding: {\n    unbonding_amount: Uint128;\n    [k: string]: unknown;\n  };\n} | {\n  claimable: {\n    claimable_amount: Uint128;\n    [k: string]: unknown;\n  };\n}"
+      }
+    ]
+  },
+  {
+    "kind": "interface",
+    "name": "ValidatorResponse",
+    "properties": [
+      {
+        "name": "address",
+        "type": "string"
+      },
+      {
+        "name": "staked",
+        "type": "Uint128"
+      }
+    ]
+  },
+  {
+    "kind": "interface",
+    "name": "TopValidatorsResponse",
+    "properties": [
+      {
+        "name": "validators",
+        "type": "string[]"
+      }
+    ]
+  },
+  {
+    "kind": "interface",
+    "name": "StakingContractReadOnlyInterface",
+    "properties": [
+      {
+        "name": "sejunoExchangeRate",
+        "type": "() => Promise<any>"
+      },
+      {
+        "name": "bjunoExchangeRate",
+        "type": "() => Promise<any>"
+      },
+      {
+        "name": "queryDevFee",
+        "type": "() => Promise<any>"
+      },
+      {
+        "name": "info",
+        "type": "() => Promise<any>"
+      },
+      {
+        "name": "undelegations",
+        "type": "({\n    address\n  }: {\n    address: Addr;\n  }) => Promise<any>"
+      },
+      {
+        "name": "userClaimable",
+        "type": "({\n    address\n  }: {\n    address: Addr;\n  }) => Promise<any>"
+      },
+      {
+        "name": "window",
+        "type": "() => Promise<any>"
+      },
+      {
+        "name": "validatorList",
+        "type": "() => Promise<any>"
+      },
+      {
+        "name": "activeUnbonding",
+        "type": "({\n    address\n  }: {\n    address: Addr;\n  }) => Promise<any>"
+      }
+    ]
+  },
+  {
+    "kind": "class",
+    "name": "StakingContractQueryContract",
+    "properties": [
+      {
+        "name": "sejunoExchangeRate",
+        "type": "unknown"
+      },
+      {
+        "name": "bjunoExchangeRate",
+        "type": "unknown"
+      },
+      {
+        "name": "queryDevFee",
+        "type": "unknown"
+      },
+      {
+        "name": "info",
+        "type": "unknown"
+      },
+      {
+        "name": "undelegations",
+        "type": "unknown"
+      },
+      {
+        "name": "userClaimable",
+        "type": "unknown"
+      },
+      {
+        "name": "window",
+        "type": "unknown"
+      },
+      {
+        "name": "validatorList",
+        "type": "unknown"
+      },
+      {
+        "name": "activeUnbonding",
+        "type": "unknown"
+      }
+    ]
+  },
+  {
+    "kind": "interface",
+    "name": "StakingContractInterface",
+    "properties": [
+      {
+        "name": "stake",
+        "type": "({\n    account,\n    customFees,\n    memo,\n    transferAmount\n  }: {\n    account: junokitTypes.UserAccount;\n    customFees?: junokitTypes.TxnStdFee;\n    memo?: string;\n    transferAmount?: readonly Coin[];\n  }, {\n    referral\n  }: {\n    referral: number;\n  }) => Promise<ExecuteResult>"
+      },
+      {
+        "name": "stakeForBjuno",
+        "type": "({\n    account,\n    customFees,\n    memo,\n    transferAmount\n  }: {\n    account: junokitTypes.UserAccount;\n    customFees?: junokitTypes.TxnStdFee;\n    memo?: string;\n    transferAmount?: readonly Coin[];\n  }, {\n    referral\n  }: {\n    referral: number;\n  }) => Promise<ExecuteResult>"
+      },
+      {
+        "name": "claim",
+        "type": "({\n    account,\n    customFees,\n    memo,\n    transferAmount\n  }: {\n    account: junokitTypes.UserAccount;\n    customFees?: junokitTypes.TxnStdFee;\n    memo?: string;\n    transferAmount?: readonly Coin[];\n  }) => Promise<ExecuteResult>"
+      },
+      {
+        "name": "claimAndStake",
+        "type": "({\n    account,\n    customFees,\n    memo,\n    transferAmount\n  }: {\n    account: junokitTypes.UserAccount;\n    customFees?: junokitTypes.TxnStdFee;\n    memo?: string;\n    transferAmount?: readonly Coin[];\n  }) => Promise<ExecuteResult>"
+      },
+      {
+        "name": "updateSejunoAddr",
+        "type": "({\n    account,\n    customFees,\n    memo,\n    transferAmount\n  }: {\n    account: junokitTypes.UserAccount;\n    customFees?: junokitTypes.TxnStdFee;\n    memo?: string;\n    transferAmount?: readonly Coin[];\n  }, {\n    address\n  }: {\n    address: Addr;\n  }) => Promise<ExecuteResult>"
+      },
+      {
+        "name": "updateBjunoAddr",
+        "type": "({\n    account,\n    customFees,\n    memo,\n    transferAmount\n  }: {\n    account: junokitTypes.UserAccount;\n    customFees?: junokitTypes.TxnStdFee;\n    memo?: string;\n    transferAmount?: readonly Coin[];\n  }, {\n    address\n  }: {\n    address: Addr;\n  }) => Promise<ExecuteResult>"
+      },
+      {
+        "name": "updateValidatorSetAddr",
+        "type": "({\n    account,\n    customFees,\n    memo,\n    transferAmount\n  }: {\n    account: junokitTypes.UserAccount;\n    customFees?: junokitTypes.TxnStdFee;\n    memo?: string;\n    transferAmount?: readonly Coin[];\n  }, {\n    address\n  }: {\n    address: Addr;\n  }) => Promise<ExecuteResult>"
+      },
+      {
+        "name": "updateRewardsAddr",
+        "type": "({\n    account,\n    customFees,\n    memo,\n    transferAmount\n  }: {\n    account: junokitTypes.UserAccount;\n    customFees?: junokitTypes.TxnStdFee;\n    memo?: string;\n    transferAmount?: readonly Coin[];\n  }, {\n    address\n  }: {\n    address: Addr;\n  }) => Promise<ExecuteResult>"
+      },
+      {
+        "name": "receive",
+        "type": "({\n    account,\n    customFees,\n    memo,\n    transferAmount\n  }: {\n    account: junokitTypes.UserAccount;\n    customFees?: junokitTypes.TxnStdFee;\n    memo?: string;\n    transferAmount?: readonly Coin[];\n  }) => Promise<ExecuteResult>"
+      },
+      {
+        "name": "advanceWindow",
+        "type": "({\n    account,\n    customFees,\n    memo,\n    transferAmount\n  }: {\n    account: junokitTypes.UserAccount;\n    customFees?: junokitTypes.TxnStdFee;\n    memo?: string;\n    transferAmount?: readonly Coin[];\n  }) => Promise<ExecuteResult>"
+      },
+      {
+        "name": "rebalanceSlash",
+        "type": "({\n    account,\n    customFees,\n    memo,\n    transferAmount\n  }: {\n    account: junokitTypes.UserAccount;\n    customFees?: junokitTypes.TxnStdFee;\n    memo?: string;\n    transferAmount?: readonly Coin[];\n  }) => Promise<ExecuteResult>"
+      },
+      {
+        "name": "pauseContract",
+        "type": "({\n    account,\n    customFees,\n    memo,\n    transferAmount\n  }: {\n    account: junokitTypes.UserAccount;\n    customFees?: junokitTypes.TxnStdFee;\n    memo?: string;\n    transferAmount?: readonly Coin[];\n  }) => Promise<ExecuteResult>"
+      },
+      {
+        "name": "unpauseContract",
+        "type": "({\n    account,\n    customFees,\n    memo,\n    transferAmount\n  }: {\n    account: junokitTypes.UserAccount;\n    customFees?: junokitTypes.TxnStdFee;\n    memo?: string;\n    transferAmount?: readonly Coin[];\n  }) => Promise<ExecuteResult>"
+      },
+      {
+        "name": "voteOnChain",
+        "type": "({\n    account,\n    customFees,\n    memo,\n    transferAmount\n  }: {\n    account: junokitTypes.UserAccount;\n    customFees?: junokitTypes.TxnStdFee;\n    memo?: string;\n    transferAmount?: readonly Coin[];\n  }, {\n    proposal,\n    vote\n  }: {\n    proposal: number;\n    vote: VoteOption;\n  }) => Promise<ExecuteResult>"
+      },
+      {
+        "name": "removeValidator",
+        "type": "({\n    account,\n    customFees,\n    memo,\n    transferAmount\n  }: {\n    account: junokitTypes.UserAccount;\n    customFees?: junokitTypes.TxnStdFee;\n    memo?: string;\n    transferAmount?: readonly Coin[];\n  }, {\n    address,\n    redelegate\n  }: {\n    address: string;\n    redelegate?: boolean;\n  }) => Promise<ExecuteResult>"
+      },
+      {
+        "name": "addValidator",
+        "type": "({\n    account,\n    customFees,\n    memo,\n    transferAmount\n  }: {\n    account: junokitTypes.UserAccount;\n    customFees?: junokitTypes.TxnStdFee;\n    memo?: string;\n    transferAmount?: readonly Coin[];\n  }, {\n    address\n  }: {\n    address: Addr;\n  }) => Promise<ExecuteResult>"
+      },
+      {
+        "name": "redelegate",
+        "type": "({\n    account,\n    customFees,\n    memo,\n    transferAmount\n  }: {\n    account: junokitTypes.UserAccount;\n    customFees?: junokitTypes.TxnStdFee;\n    memo?: string;\n    transferAmount?: readonly Coin[];\n  }, {\n    from,\n    to\n  }: {\n    from: string;\n    to: string;\n  }) => Promise<ExecuteResult>"
+      },
+      {
+        "name": "changeOwner",
+        "type": "({\n    account,\n    customFees,\n    memo,\n    transferAmount\n  }: {\n    account: junokitTypes.UserAccount;\n    customFees?: junokitTypes.TxnStdFee;\n    memo?: string;\n    transferAmount?: readonly Coin[];\n  }, {\n    newOwner\n  }: {\n    newOwner: Addr;\n  }) => Promise<ExecuteResult>"
+      },
+      {
+        "name": "recoverJuno",
+        "type": "({\n    account,\n    customFees,\n    memo,\n    transferAmount\n  }: {\n    account: junokitTypes.UserAccount;\n    customFees?: junokitTypes.TxnStdFee;\n    memo?: string;\n    transferAmount?: readonly Coin[];\n  }, {\n    amount,\n    denom,\n    to\n  }: {\n    amount: Uint128;\n    denom: string;\n    to: string;\n  }) => Promise<ExecuteResult>"
+      },
+      {
+        "name": "killSwitchUnbond",
+        "type": "({\n    account,\n    customFees,\n    memo,\n    transferAmount\n  }: {\n    account: junokitTypes.UserAccount;\n    customFees?: junokitTypes.TxnStdFee;\n    memo?: string;\n    transferAmount?: readonly Coin[];\n  }) => Promise<ExecuteResult>"
+      },
+      {
+        "name": "killSwitchOpenWithdraws",
+        "type": "({\n    account,\n    customFees,\n    memo,\n    transferAmount\n  }: {\n    account: junokitTypes.UserAccount;\n    customFees?: junokitTypes.TxnStdFee;\n    memo?: string;\n    transferAmount?: readonly Coin[];\n  }) => Promise<ExecuteResult>"
+      },
+      {
+        "name": "changeUnbondingTime",
+        "type": "({\n    account,\n    customFees,\n    memo,\n    transferAmount\n  }: {\n    account: junokitTypes.UserAccount;\n    customFees?: junokitTypes.TxnStdFee;\n    memo?: string;\n    transferAmount?: readonly Coin[];\n  }, {\n    newTime\n  }: {\n    newTime: number;\n  }) => Promise<ExecuteResult>"
+      },
+      {
+        "name": "changeDevFee",
+        "type": "({\n    account,\n    customFees,\n    memo,\n    transferAmount\n  }: {\n    account: junokitTypes.UserAccount;\n    customFees?: junokitTypes.TxnStdFee;\n    memo?: string;\n    transferAmount?: readonly Coin[];\n  }, {\n    devAddress,\n    devFee\n  }: {\n    devAddress?: Addr;\n    devFee?: number;\n  }) => Promise<ExecuteResult>"
+      },
+      {
+        "name": "changePegRecoveryFee",
+        "type": "({\n    account,\n    customFees,\n    memo,\n    transferAmount\n  }: {\n    account: junokitTypes.UserAccount;\n    customFees?: junokitTypes.TxnStdFee;\n    memo?: string;\n    transferAmount?: readonly Coin[];\n  }, {\n    pegRecoveryFee\n  }: {\n    pegRecoveryFee: number;\n  }) => Promise<ExecuteResult>"
+      },
+      {
+        "name": "changeThreshold",
+        "type": "({\n    account,\n    customFees,\n    memo,\n    transferAmount\n  }: {\n    account: junokitTypes.UserAccount;\n    customFees?: junokitTypes.TxnStdFee;\n    memo?: string;\n    transferAmount?: readonly Coin[];\n  }, {\n    erThreshold\n  }: {\n    erThreshold: number;\n  }) => Promise<ExecuteResult>"
+      },
+      {
+        "name": "claimAirdrop1",
+        "type": "({\n    account,\n    customFees,\n    memo,\n    transferAmount\n  }: {\n    account: junokitTypes.UserAccount;\n    customFees?: junokitTypes.TxnStdFee;\n    memo?: string;\n    transferAmount?: readonly Coin[];\n  }, {\n    address,\n    amount,\n    proof,\n    stage\n  }: {\n    address: Addr;\n    amount: Uint128;\n    proof: string[];\n    stage: number;\n  }) => Promise<ExecuteResult>"
+      },
+      {
+        "name": "claimAirdrop2",
+        "type": "({\n    account,\n    customFees,\n    memo,\n    transferAmount\n  }: {\n    account: junokitTypes.UserAccount;\n    customFees?: junokitTypes.TxnStdFee;\n    memo?: string;\n    transferAmount?: readonly Coin[];\n  }, {\n    address,\n    amount,\n    proof\n  }: {\n    address: Addr;\n    amount: Uint128;\n    proof: string[];\n  }) => Promise<ExecuteResult>"
+      },
+      {
+        "name": "claimAirdrop3",
+        "type": "({\n    account,\n    customFees,\n    memo,\n    transferAmount\n  }: {\n    account: junokitTypes.UserAccount;\n    customFees?: junokitTypes.TxnStdFee;\n    memo?: string;\n    transferAmount?: readonly Coin[];\n  }, {\n    address\n  }: {\n    address: Addr;\n  }) => Promise<ExecuteResult>"
+      },
+      {
+        "name": "claimReward",
+        "type": "({\n    account,\n    customFees,\n    memo,\n    transferAmount\n  }: {\n    account: junokitTypes.UserAccount;\n    customFees?: junokitTypes.TxnStdFee;\n    memo?: string;\n    transferAmount?: readonly Coin[];\n  }) => Promise<ExecuteResult>"
+      },
+      {
+        "name": "changeReferralContract",
+        "type": "({\n    account,\n    customFees,\n    memo,\n    transferAmount\n  }: {\n    account: junokitTypes.UserAccount;\n    customFees?: junokitTypes.TxnStdFee;\n    memo?: string;\n    transferAmount?: readonly Coin[];\n  }, {\n    referralContract\n  }: {\n    referralContract: Addr;\n  }) => Promise<ExecuteResult>"
+      },
+      {
+        "name": "removeOldWindowData",
+        "type": "({\n    account,\n    customFees,\n    memo,\n    transferAmount\n  }: {\n    account: junokitTypes.UserAccount;\n    customFees?: junokitTypes.TxnStdFee;\n    memo?: string;\n    transferAmount?: readonly Coin[];\n  }, {\n    window\n  }: {\n    window: number;\n  }) => Promise<ExecuteResult>"
+      },
+      {
+        "name": "removeOldClaimData",
+        "type": "({\n    account,\n    customFees,\n    memo,\n    transferAmount\n  }: {\n    account: junokitTypes.UserAccount;\n    customFees?: junokitTypes.TxnStdFee;\n    memo?: string;\n    transferAmount?: readonly Coin[];\n  }) => Promise<ExecuteResult>"
+      },
+      {
+        "name": "removeOldQueueData",
+        "type": "({\n    account,\n    customFees,\n    memo,\n    transferAmount\n  }: {\n    account: junokitTypes.UserAccount;\n    customFees?: junokitTypes.TxnStdFee;\n    memo?: string;\n    transferAmount?: readonly Coin[];\n  }) => Promise<ExecuteResult>"
+      }
+    ]
+  },
+  {
+    "kind": "class",
+    "name": "StakingContractContract",
+    "properties": [
+      {
+        "name": "stake",
+        "type": "unknown"
+      },
+      {
+        "name": "stakeForBjuno",
+        "type": "unknown"
+      },
+      {
+        "name": "claim",
+        "type": "unknown"
+      },
+      {
+        "name": "claimAndStake",
+        "type": "unknown"
+      },
+      {
+        "name": "updateSejunoAddr",
+        "type": "unknown"
+      },
+      {
+        "name": "updateBjunoAddr",
+        "type": "unknown"
+      },
+      {
+        "name": "updateValidatorSetAddr",
+        "type": "unknown"
+      },
+      {
+        "name": "updateRewardsAddr",
+        "type": "unknown"
+      },
+      {
+        "name": "receive",
+        "type": "unknown"
+      },
+      {
+        "name": "advanceWindow",
+        "type": "unknown"
+      },
+      {
+        "name": "rebalanceSlash",
+        "type": "unknown"
+      },
+      {
+        "name": "pauseContract",
+        "type": "unknown"
+      },
+      {
+        "name": "unpauseContract",
+        "type": "unknown"
+      },
+      {
+        "name": "voteOnChain",
+        "type": "unknown"
+      },
+      {
+        "name": "removeValidator",
+        "type": "unknown"
+      },
+      {
+        "name": "addValidator",
+        "type": "unknown"
+      },
+      {
+        "name": "redelegate",
+        "type": "unknown"
+      },
+      {
+        "name": "changeOwner",
+        "type": "unknown"
+      },
+      {
+        "name": "recoverJuno",
+        "type": "unknown"
+      },
+      {
+        "name": "killSwitchUnbond",
+        "type": "unknown"
+      },
+      {
+        "name": "killSwitchOpenWithdraws",
+        "type": "unknown"
+      },
+      {
+        "name": "changeUnbondingTime",
+        "type": "unknown"
+      },
+      {
+        "name": "changeDevFee",
+        "type": "unknown"
+      },
+      {
+        "name": "changePegRecoveryFee",
+        "type": "unknown"
+      },
+      {
+        "name": "changeThreshold",
+        "type": "unknown"
+      },
+      {
+        "name": "claimAirdrop1",
+        "type": "unknown"
+      },
+      {
+        "name": "claimAirdrop2",
+        "type": "unknown"
+      },
+      {
+        "name": "claimAirdrop3",
+        "type": "unknown"
+      },
+      {
+        "name": "claimReward",
+        "type": "unknown"
+      },
+      {
+        "name": "changeReferralContract",
+        "type": "unknown"
+      },
+      {
+        "name": "removeOldWindowData",
+        "type": "unknown"
+      },
+      {
+        "name": "removeOldClaimData",
+        "type": "unknown"
+      },
+      {
+        "name": "removeOldQueueData",
+        "type": "unknown"
+      }
+    ]
+  }
+]
+}

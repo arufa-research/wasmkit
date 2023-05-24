@@ -1,0 +1,23 @@
+.social-header-wrapper{
+  border-top: 1px solid var(--primary-font-color);
+  width: 100%;
+  margin: 10px auto;
+}
+.social-header{
+  margin: 20px 0;
+  display: flex;
+  column-gap: 20px;
+  justify-content: center;
+  /* border-bottom: 1px solid #3c404a; */
+}
+.social-header-icon{
+  transition: 0.2s;
+}
+.social-header-icon:hover{
+  transition: 0.2s;
+  transform: scale(1.2);
+}
+.social-header-icon:hover a{
+  color: var(--accent-color-1);
+  transition: 0.2s;
+}

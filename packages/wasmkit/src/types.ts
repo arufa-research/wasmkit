@@ -442,3 +442,22 @@ export interface Structure {
   name: string
   properties?: Property[]
 }
+
+export interface DeployInfo {
+  codeId: number;
+  contractCodeHash: string;
+  deployTimestamp: string;
+}
+
+export interface InstantiateInfo {
+  instantiateTag: string;
+  contractAddress: string;
+  instantiateTimestamp: string;
+}
+
+export interface CounterData {
+  default: {
+    deployInfo: DeployInfo;
+    instantiateInfo: InstantiateInfo[];
+  };
+}

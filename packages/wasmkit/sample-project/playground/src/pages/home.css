@@ -1,0 +1,518 @@
+.home-page {
+  height: 100vh;
+  font-size: 1rem;
+  /* padding-right: 5px; */
+
+  /* overflow: hidden; */
+}
+/* Set the width and background color of the sidebar */
+.handle-side{
+  float: left;
+  color: aliceblue;
+  text-align: center;
+}
+.sidebar {
+  /* width: 20%;
+    background-color: #ccc; */
+  height: 100vh;
+  width: 15rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+
+  /* background-color: rgb(19, 40, 161); */
+  font-size: 1rem;
+  float: left; /* add this line to float the sidebar to the left */
+  border-right: 1px solid var(--primary-font-color);
+  text-transform: capitalize;
+  /* overflow-y: auto; */
+  color: aliceblue;
+  text-align: center;
+}
+.sidebar button {
+  text-decoration: none;
+  border: none;
+  background-color: transparent;
+  color: var(--primary-font-color);
+  font-size: 1.5rem;
+  font-weight: 200;
+  text-transform: capitalize;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+.sidebar-button {
+  padding: 0.7rem 0.5rem;
+  /* color: var(--primary-font-color); */
+  font-size: var(--normal-font-size);
+  text-align: center;
+  transition: 100ms ease-in-out;
+  display: flex;
+  justify-content: center;
+  gap: 2.5rem;
+  color: var(--faded-subtitle-color);
+  justify-content: flex-start;
+  /* padding-top: 20px; */
+}
+
+.sidebar-button:hover {
+  border-right: 1rem var(--accent-color-1) solid;
+  transition: 100ms ease-in-out;
+  color: var(--primary-font-color);
+  cursor: pointer;
+  /* transform: scale(1.1); */
+}
+.sidebar-button__active {
+  /* background-color: var(--accent-color-1); */
+  padding: 0.7rem 0.5rem;
+  background: linear-gradient(
+    to right,
+    var(--gradient-left),
+    var(--gradient-right)
+  );
+  border-radius: var(--standard-radius);
+  color: var(--primary-font-color);
+}
+.sidebar-button__active:hover {
+  transition: none;
+  color: var(--secondary-font-color);
+}
+.sidebar-menu {
+  height: 70%;
+  overflow: hidden;
+  overflow-y: auto;
+  padding-top: 1rem;
+}
+.container{
+  flex-grow: 1;
+  height: fit-content;
+  margin-left: 15rem;
+  overflow: auto;
+  padding-left: 2rem;
+  padding-right: 2rem;
+  /* position: fixed; */
+}
+.text-logo-container {
+  color: var(--primary-font-color);
+  display: flex;
+  flex-direction: row;
+  text-align: center;
+  align-items: center;
+  margin-top: 5px;
+  gap: 3px;
+  border-bottom: 1px solid var(--primary-font-color);
+}
+.text-logo-img {
+  height: 50px;
+}
+
+/* Set the height and background color of the navbar divs */
+.navbar {
+  /* height: 50px;
+    flex: 1; add this line to make the navbar items fill the available space */
+  padding-top: 70px;
+  height: 35%;
+  /* background-color: rgb(9, 28, 110); modify this as needed */
+  /* overflow: hidden;  */
+  font-size: 14px;
+  border-bottom: 1px solid var(--primary-font-color);
+  /* position: relative; */
+}
+
+
+.description {
+ 
+  /* display: flex; */
+
+  width: 100%;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  font-size: 32px;
+  /* float: left; */
+  text-align: left;
+  padding-left: 15px;
+  height: 40%;
+  color: var(--primary-font-color);
+  font-weight: 400;
+  text-transform: capitalize;
+  justify-content: left;
+  height: 4rem;
+}
+
+.navbar button {
+  text-decoration: none;
+  height: 100%;
+  background-color: transparent;
+  color: var(--primary-font-color);
+  /* font-size: 24px; */
+  /* font-weight: 300; */
+  /* text-transform: capitalize; */
+
+  cursor: pointer;
+}
+/* Set the background color of each navbar item */
+.navbar-item {
+  text-align: left;
+  text-decoration: none; /* add this line to remove the underline from links */
+  padding: 10px; /* add this line to add some padding to the navbar items */
+  /* flex: 1; add this line to make each navbar item fill the available space equally */
+  height: 60%;
+  /* font-size: 24px; */
+  /* font-weight: 300; */
+  color: whitesmoke;
+  width: calc(100% / 3);
+  /* padding-left: 5px; */
+  /* border-radius: 10%; */
+  /* border-right: 0.5rem transparent solid; */
+   /* overflow:hidden; */
+  transition: 100ms ease-in-out;
+  border: none;
+}
+.nav-active {
+  background: linear-gradient(
+    to right,
+    var(--gradient-left),
+    var(--gradient-right)
+  ) !important;
+  border: 1px solid var(--primary-font-color);
+  text-align: left;
+  text-decoration: none;
+  padding: 10px; 
+  height: 60%;
+  color: whitesmoke;
+  width: calc(100% / 3);
+  transition: 100ms ease-in-out;
+}
+/* Add hover effects to the navbar items */
+.navbar-item:hover {
+  /* background-color: var( --primary-bg-color); */
+  cursor: pointer;
+  border-right: 0.5rem var(--accent-color-1) solid;
+  transition: 100ms ease-in-out;
+  color: var(--primary-font-color);
+  cursor: pointer;
+}
+
+/* Set the remaining space to fill the container */
+.playground {
+  /* flex: 1;
+    background-color: #eee; */
+  padding-top: 1.5rem;
+  padding-left: 17rem;
+  color: var(--primary-font-color);
+  font-weight: 300;
+  font-size: 1rem;
+  /* width: calc(100vh-300px); */
+  /* height: calc(100vh - 200px); */
+  /* width: 80%; */
+  /* float: right; add this line to float the fillup div to the right */
+  /* background-color: rgb(13, 4, 134); */
+  /* overflow-y: scroll; */
+}
+/* .playground button {
+  border: none;
+  text-decoration: none;
+  width: 100%;
+} */
+.wallet-button {
+  overflow: hidden;
+  text-align: left;
+  /* float: left; */
+  width: fit-content;
+  float: right;
+  /* padding-right:10px ; */
+}
+/* button{
+    float: left;
+  } */
+.heading {
+  text-align: center;
+  font-size: 1.5rem;
+}
+.nav-heading {
+  text-align: left;
+  font-size: 1.5rem;
+  height: 2rem;
+}
+.nav-subheading {
+  text-align: left;
+  font-size: 1rem;
+  height: 1.5rem;
+}
+
+.dropdown-menu {
+  line-height: 50px;
+  max-height: 300px;
+  font-size: 14px;
+  font-weight: 200;
+  overflow-y: auto;
+  /* background-color: rgb(38, 109, 168); */
+}
+
+.execute-page {
+  display: flex;
+  flex-direction: row;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+}
+.query-page{
+  display: flex;
+  flex-direction: row;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+}
+.menubar {
+  width: 50%;
+  flex: 1;
+  color: var(--primary-font-color);
+ 
+}
+/* 
+#menu {
+  width: fit-content;
+  height: 28px;
+  font-size: 18px;
+  font-weight: 300;
+  color: var(--primary-font-color);
+  background-color: var(--gradient-right);
+  border-radius: 2%;
+} */
+.query-menu{
+  font-size: 1rem;
+  font-weight: 300;
+  color: var(--primary-font-color);
+  padding: 0.7rem 0.5rem 0.7rem 1rem;
+  background-color: var(--gradient-right);
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  position: relative;
+  max-height: 5rem;
+  cursor: pointer;
+}
+.query-menu .select{
+  width: 120%;
+}
+.query-menu .select option{
+  max-height: 30px;
+  background-color: none;
+}
+.query-menu .select select{
+  background: transparent;
+  line-height: 1;
+  border: 0;
+  padding: 0;
+  border-radius: 0;
+  width: 120%;
+  position: relative;
+  z-index: 10;
+  font-size: 1em;
+}
+
+
+/* Style the custom select container */
+.custom-select {
+  padding-top: 2rem;
+  position: relative;
+  display: inline-block;
+  width: 60%;
+}
+
+/* Style the custom select text */
+.select-selected {
+  background-color: var(--gradient-right);
+  padding: 0.8rem 1.6rem;
+  border: 1px solid var(--primary-font-color);
+  border-radius: 4px;
+ 
+  text-align: left;
+  color: var(--primary-font-color);
+  
+}
+
+/* Style the select dropdown items */
+.select-items {
+  position: absolute;
+  z-index: 1;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background-color: var(--dropdown-background);
+  overflow: auto;
+  max-height: 14rem;
+  border-radius: 4px;
+  width: 100%;
+  
+  /* overflow: scroll; */
+}
+.angleDown{
+  float: right;
+  cursor: pointer;
+}
+
+.select-item {
+  padding: 1rem 1.6rem;
+  cursor: pointer;
+  border-top: 1px solid var(--primary-font-color) ;
+  border-bottom: 1px solid var(--primary-font-color);
+  border-left: 1px solid var(--primary-font-color);
+  
+}
+
+/* Style the select dropdown items on hover */
+.select-item:hover {
+  background-color: var( --accent-color-1);
+}
+
+.select-items::-webkit-scrollbar {
+  width: 8px;
+}
+
+.select-items::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.select-items::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+.select-items::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+
+
+
+.btn {
+  width: fit-content;
+  min-width: 8rem;
+  border-radius: 50px;
+  padding: 14px 0;
+  cursor: pointer;
+  transition: 0.2s;
+  padding: 0.5rem;
+  /* font-family: "Poppins SemiBold"; */
+}
+
+.btn:active {
+  transform: translateY(2px);
+}
+
+.primary-btn {
+  color: var(--primary-font-color);
+  border: 2px solid linen;
+  font-size: 1rem;
+  font-weight: 300;
+  background: linear-gradient(
+    to right,
+    var(--gradient-left),
+    var(--gradient-right)
+  ) !important;
+}
+/* @media only screen and (max-width: 414px) {
+  .primary-btn {
+    font-size: 13px;
+  }
+} */
+
+.primary-btn:hover {
+  color: var(--secondary-font-color);
+  border: 2px solid #ff5823;
+ 
+}
+
+.result{
+  height: fit-content;
+  color: var(--primary-font-color);
+}
+.output-area{
+  font-size: 1rem;
+  font-weight: 400;
+  padding-top: 1rem;
+}
+#output{
+ 
+  min-width: 1rem;
+  width:fit-content;
+  height: 2rem;
+  background-color: var(--dropdown-background);
+  color: var(--primary-font-color);
+}
+.exe-op{
+  width: 33rem !important;
+}
+.menuIcon{
+  display: none;
+}
+@media (max-width: 768px) {
+  .sidebar {
+    /* left: -300px; */
+		display: none;
+		/* transition: 0.3s ease-in-out;
+		z-index: 2; */
+  }
+  .sidebar.active{
+		left: 0;
+		display: block;
+		width: 60vw;
+		overflow-y: scroll;
+		z-index: 2;
+		margin-top: 40px;
+    position: absolute;
+  top: 0%; /* position the element just below the current screen */
+  left: 0;
+  width: 50%;
+  height: -webkit-fill-available;
+  /* background-color: #fff; */
+  z-index: 9999;
+  transition: all 0.3s ease-in-out;
+  background: linear-gradient(var(--primary-bg-color), var(--primary-bg-color))
+  padding-box,
+linear-gradient(to right, var(--multicolor-left), var(--multicolor-right))
+  border-box;
+  /* opacity: 90%; */
+	}
+  .playground{
+    padding-left: 0;
+    overflow-x: scroll;
+  }
+  .container{
+    margin-left: 0;
+  }
+  .home-page{
+    min-height: fit-content;
+    /* height: -webkit-fill-available; */
+  }
+  .menuIcon{
+    display: contents;
+    height: 40px;
+    align-items: center;
+    text-align: center;
+    color: var(--primary-font-color);
+    z-index: 2;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    font-size: x-large;
+    position: fixed;
+    width: 100%;
+    float: left;
+    background-color: var(--primary-bg-color);
+   }
+   .menuIcon-icon{
+    z-index: 3;
+  }
+  
+  
+}
+
+
+
+.input-field{
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  justify-content: space-between;
+  width: 80%;
+  margin-top: 5px;
+}

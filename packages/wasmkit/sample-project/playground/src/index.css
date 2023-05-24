@@ -1,0 +1,17 @@
+body {
+  margin: 0;
+  font-family:var(--standard-font-family);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-image: var(--bg-img);
+  background-repeat: no-repeat;
+  background-size: cover;
+  /* padding-top: 10px; */
+  /* overflow: hidden;
+  overflow-y: scroll; */
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
