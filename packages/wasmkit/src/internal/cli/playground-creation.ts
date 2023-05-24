@@ -23,7 +23,6 @@ export function printSuggestedCommands(projectName: string): void {
 
 function createContractListJson(contractDir: string, destinationDir: string): void {
   const files = fs.readdirSync(contractDir); // Get an array of all files in the directory
-  const json = [];
   const dest = path.join(destinationDir, "contractList.json");
   for (const file of files) {
     const fileName = path.parse(file).name;
@@ -32,7 +31,6 @@ function createContractListJson(contractDir: string, destinationDir: string): vo
     const yamlData = yaml.load(yamlFile) as CounterData;
     const codeId = yamlData.default.deployInfo.codeId;
     const codeAddress = yamlData.default.instantiateInfo[0].contractAddress;
-    // console.log("yaml",yamlData, codeId, codeAddress);
     const jsonData = {
       [fileName]: {
         codeId,
