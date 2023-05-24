@@ -11,15 +11,18 @@ export default async function run () {
  const deploy_response = await contract.deploy(
     contract_owner,
     { // custom fees
-      amount: [{ amount: "900000", denom: "ujunox" }],
-      gas: "35000000",
+
+      amount: [{ amount: "750000", denom: "ujunox" }],
+      gas: "3000000",
     }
   );
   console.log(deploy_response);
 
   const customFees = { // custom fees
-    amount: [{ amount: "900000", denom: "ujunox" }],
-    gas: "3500000",
+
+    amount: [{ amount: "750000", denom: "ujunox" }],
+    gas: "3000000",
+
   };
   const contract_info = await contract.instantiate(
     {"count": 102},

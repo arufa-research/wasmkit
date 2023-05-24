@@ -92,15 +92,15 @@ const networks = {
     accounts: osmosis_testnet_accounts,
     fees: {
       upload: {
-        amount: [{ amount: "100000", denom: "uluna" }],
+        amount: [{ amount: "100000", denom: "uosmo" }],
         gas: "500000",
       },
       init: {
-        amount: [{ amount: "50000", denom: "uluna" }],
+        amount: [{ amount: "50000", denom: "uosmo" }],
         gas: "250000",
       },
       exec: {
-        amount: [{ amount: "50000", denom: "uluna" }],
+        amount: [{ amount: "50000", denom: "uosmo" }],
         gas: "250000",
       }
     },
@@ -119,10 +119,28 @@ module.exports = {
     localnet: networks.localnet,
     mainnet: networks.juno_mainnet,
   },
-  localnetwork: {
-    node_type: "juno-node",
-    rpc_port: 26657,
-    rest_port: 1317,
+
+  localnetworks: {
+    juno: {
+      docker_image: "uditgulati0/juno-node",
+      rpc_port: 26657,
+      rest_port: 1317,
+      flags: ["GAS_LIMIT=10000000", "STAKE_TOKEN=ujunox", "TIMEOUT_COMMIT=5s"],
+      docker_command: "./setup_and_run.sh juno16g2rahf5846rxzp3fwlswy08fz8ccuwk03k57y",
+    },
+    neutron: {
+      docker_image: "uditgulati0/neutron-node",
+      rpc_port: 26657,
+      rest_port: 1317,
+      flags: ["RUN_BACKGROUND=0"],
+    },
+    osmosis: {
+      docker_image: "uditgulati0/osmosis-node",
+      rpc_port: 26657,
+      rest_port: 1317,
+      flags: [],
+      docker_command: "/osmosis/setup.sh",
+    },
   },
   mocha: {
     timeout: 60000
