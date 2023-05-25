@@ -6,7 +6,7 @@ target/
 build/
 artifacts/
 playground/
-contracts/schema
+contracts/schema/
 # Node generated
 package-lock.json
 node_modules/
