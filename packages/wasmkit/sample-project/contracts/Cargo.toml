@@ -1,7 +1,6 @@
 [package]
 
 name = "sample-project"
->>>>>>> origin/master
 version = "1.0.0"
 authors = ["Udit Gulati"]
 edition = "2018"
