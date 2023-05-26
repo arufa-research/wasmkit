@@ -303,7 +303,7 @@ Please check that the configured keypair are correct.`,
 
       You can learn how to use WasmKit by reading the [Getting Started guide](../getting-started).`,
       shouldBeReported: false
-    },
+    }
   },
   NETWORK: {
     CONFIG_NOT_FOUND: {
@@ -1206,7 +1206,7 @@ If you aren't overriding compilation-related tasks, please report this as a bug.
 
 If you aren't overriding compilation-related tasks, please report this as a bug.`,
       shouldBeReported: true
-    },
+    }
   },
   CONTRACT_NAMES: {
     INVALID_FULLY_QUALIFIED_NAME: {

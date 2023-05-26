@@ -453,7 +453,7 @@ export type ContractFunction<T = any> = ( // eslint-disable-line  @typescript-es
   ...args: any[] // eslint-disable-line  @typescript-eslint/no-explicit-any
 ) => Promise<T>;
 
-//playground creation related
+// playground creation related
 export interface Property {
   name: string
   type: string
@@ -466,21 +466,9 @@ export interface Structure {
   properties?: Property[]
 }
 
-export interface DeployInfo {
-  codeId: number;
-  contractCodeHash: string;
-  deployTimestamp: string;
-}
-
-export interface InstantiateInfo {
-  instantiateTag: string;
-  contractAddress: string;
-  instantiateTimestamp: string;
-}
-
 export interface CounterData {
   default: {
-    deployInfo: DeployInfo;
-    instantiateInfo: InstantiateInfo[];
-  };
+    deployInfo: DeployInfo
+    instantiateInfo: InstantiateInfo[]
+  }
 }

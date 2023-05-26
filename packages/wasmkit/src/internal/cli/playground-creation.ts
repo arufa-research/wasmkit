@@ -1,19 +1,18 @@
 import chalk from "chalk";
 import * as fs from "fs";
+import * as yaml from "js-yaml";
 // import fsExtra from "fs-extra";
 import path from "path";
 import * as ts from "typescript";
-import { Structure, Property, CounterData } from "../../types";
+
+import { CounterData, Property, Structure } from "../../types";
 import { WasmkitError } from "../core/errors";
 import { ERRORS } from "../core/errors-list";
 import { initialize } from "./initialize-playground";
-import * as yaml from "js-yaml";
-export function printSuggestedCommands(projectName: string): void {
+export function printSuggestedCommands (projectName: string): void {
   const currDir = process.cwd();
   const projectPath = path.join(currDir, projectName);
   console.log(`Success! Created project at ${chalk.greenBright(projectPath)}.`);
-  // TODO: console.log(`Inside that directory, you can run several commands:`);
-  // list commands and respective description
 
   console.log(`Begin by typing:`);
   console.log(`  cd ${projectName}`);
@@ -21,7 +20,7 @@ export function printSuggestedCommands(projectName: string): void {
   console.log(`  npm start`);
 }
 
-function createContractListJson(contractDir: string, destinationDir: string): void {
+function createContractListJson (contractDir: string, destinationDir: string): void {
   const files = fs.readdirSync(contractDir); // Get an array of all files in the directory
   const dest = path.join(destinationDir, "contractList.json");
   for (const file of files) {
@@ -34,8 +33,8 @@ function createContractListJson(contractDir: string, destinationDir: string): vo
     const jsonData = {
       [fileName]: {
         codeId,
-        codeAddress,
-      },
+        codeAddress
+      }
     };
     let existingData: Record<string, unknown> = {};
     if (fs.existsSync(dest)) {
@@ -48,7 +47,7 @@ function createContractListJson(contractDir: string, destinationDir: string): vo
   }
 }
 
-function convertTypescriptFileToJson(inputFilePath: string, outputFilePath: string): void {
+function convertTypescriptFileToJson (inputFilePath: string, outputFilePath: string): void {
   const sourceFile = ts.createSourceFile(
     inputFilePath,
     fs.readFileSync(inputFilePath).toString(),
@@ -56,43 +55,43 @@ function convertTypescriptFileToJson(inputFilePath: string, outputFilePath: stri
   );
   const structures: Structure[] = [];
 
-  function parseNode(node: ts.Node): void {
+  function parseNode (node: ts.Node): void {
     if (ts.isClassDeclaration(node)) {
       const properties: Property[] = node.members
         .filter(ts.isPropertyDeclaration)
         .map((member) => ({
           name: member.name.getText(sourceFile),
-          type: member.type?.getText(sourceFile) || "unknown",
-          modifiers: member.modifiers?.map((modifier) => modifier.getText(sourceFile)),
+          type: member.type?.getText(sourceFile) ?? "unknown",
+          modifiers: member.modifiers?.map((modifier) => modifier.getText(sourceFile))
         }));
       structures.push({
         kind: "class",
-        name: node.name?.getText(sourceFile) || "unknown",
-        properties,
+        name: node.name?.getText(sourceFile) ?? "unknown",
+        properties
       });
     } else if (ts.isInterfaceDeclaration(node)) {
       const properties: Property[] = node.members
         .filter(ts.isPropertySignature)
-        .map((member) => ({
-          name: member.name.getText(sourceFile),
-          type: member.type?.getText(sourceFile) || "unknown",
-          modifiers: member.modifiers?.map((modifier) => modifier.getText(sourceFile)),
+        .map((Member) => ({
+          name: Member.name.getText(sourceFile),
+          type: Member.type?.getText(sourceFile) ?? "unknown",
+          modifiers: Member.modifiers?.map((modifier) => modifier.getText(sourceFile))
         }));
       structures.push({
         kind: "interface",
-        name: node.name?.getText(sourceFile) || "unknown",
-        properties,
+        name: node.name?.getText(sourceFile) ?? "unknown",
+        properties
       });
     } else if (ts.isTypeAliasDeclaration(node)) {
       structures.push({
         kind: "typeAlias",
-        name: node.name?.getText(sourceFile) || "unknown",
+        name: node.name?.getText(sourceFile) ?? "unknown",
         properties: [
           {
             name: "type",
-            type: node.type?.getText(sourceFile) || "unknown",
-          },
-        ],
+            type: node.type?.getText(sourceFile) ?? "unknown"
+          }
+        ]
       });
     }
 
@@ -103,7 +102,7 @@ function convertTypescriptFileToJson(inputFilePath: string, outputFilePath: stri
 
   fs.writeFileSync(outputFilePath, JSON.stringify(structures, null, 2));
 }
-function processFilesInFolder(folderPath: string, destPath: string) {
+function processFilesInFolder (folderPath: string, destPath: string): void {
   const files = fs.readdirSync(folderPath);
 
   files.forEach((file) => {
@@ -115,7 +114,14 @@ function processFilesInFolder(folderPath: string, destPath: string) {
   });
 }
 
-export async function createPlayground(
+function createDir (dir: string): void {
+  fs.mkdir(dir, { recursive: true }, (err) => {
+    if (err) {
+      console.error("error", err);
+    }
+  });
+}
+export async function createPlayground (
   projectName: string,
   templateName: string,
   destination: string
@@ -125,11 +131,11 @@ export async function createPlayground(
     const currDir = process.cwd();
     const artifacts = path.join(currDir, "artifacts");
     const checkpointsDir = path.join(artifacts, "checkpoints");
-    //check existence of artifact directory
+    // check existence of artifact directory
     if (!fs.existsSync(artifacts)) {
       throw new WasmkitError(ERRORS.GENERAL.ARTIFACTS_NOT_FOUND, {});
     } else if (!fs.existsSync(checkpointsDir)) {
-      //check existence of checkpoint directory
+      // check existence of checkpoint directory
       throw new WasmkitError(ERRORS.GENERAL.CHECKPOINTS_NOT_FOUND, {});
     }
 
@@ -138,44 +144,43 @@ export async function createPlayground(
       force: false,
       projectName: projectName,
       templateName: templateName,
-      destination: projectPath,
+      destination: projectPath
     });
 
     const playground = path.join(currDir, "playground");
     const playgroundDest = path.join(playground, "src");
     const ContractDir = path.join(playgroundDest, "contracts");
-    fs.mkdir(ContractDir, { recursive: true }, (err) => {
-      if (err) {
-        console.error("Error creating folder:", err);
-      } else {
-        console.log("Folder created successfully!");
-      }
-    });
-
+    // fs.mkdir(ContractDir, { recursive: true }, (err) => {
+    //   if (err) {
+    //     console.error("Error creating folder:", err);
+    //   } else {
+    //     console.log("Folder created successfully!");
+    //   }
+    // });
+    createDir(ContractDir);
+    const errDir = "Error creating folder:";
     const schemaDest = path.join(ContractDir, "schema");
-    const contracts = path.join(artifacts, "contracts");
+    // const contracts = path.join(artifacts, "contracts");
     const instantiateDir = path.join(ContractDir, "instantiateInfo");
 
-    fs.mkdir(instantiateDir, { recursive: true }, (err) => {
-      if (err) {
-        console.error("Error creating folder:", err);
-      } else {
-        console.log("Folder created successfully!");
-      }
-    });
+    // fs.mkdir(instantiateDir, { recursive: true }, (err) => {
+    //   if (err) {
+    //     console.error(errDir, err);
+    //   }
+    // });
+    createDir(instantiateDir);
 
     createContractListJson(checkpointsDir, instantiateDir);
     // createYamlToJson(checkpointsDir, instantiateDir);
 
     const contractsSchema = path.join(artifacts, "typescript_schema");
 
-    fs.mkdir(schemaDest, { recursive: true }, (err) => {
-      if (err) {
-        console.error("Error creating folder:", err);
-      } else {
-        console.log("Folder created successfully!");
-      }
-    });
+    // fs.mkdir(schemaDest, { recursive: true }, (err) => {
+    //   if (err) {
+    //     console.error(errDir, err);
+    //   }
+    // });
+    createDir(schemaDest);
     processFilesInFolder(contractsSchema, schemaDest);
     return;
   }
@@ -186,7 +191,7 @@ export async function createPlayground(
   printSuggestedCommands(projectName);
 }
 
-export function createConfirmationPrompt(
+export function createConfirmationPrompt (
   name: string,
   message: string
   // eslint-disable-next-line
@@ -198,21 +203,21 @@ export function createConfirmationPrompt(
     message,
     initial: "y",
     default: "(Y/n)",
-    isTrue(input: string | boolean) {
+    isTrue (input: string | boolean) {
       if (typeof input === "string") {
         return input.toLowerCase() === "y";
       }
 
       return input;
     },
-    isFalse(input: string | boolean) {
+    isFalse (input: string | boolean) {
       if (typeof input === "string") {
         return input.toLowerCase() === "n";
       }
 
       return input;
     },
-    format(): string {
+    format (): string {
       const value = this.value === true ? "y" : "n";
 
       if (this.state.submitted === true) {
@@ -220,7 +225,7 @@ export function createConfirmationPrompt(
       }
 
       return value;
-    },
+    }
   };
 }
 
