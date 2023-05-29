@@ -47,7 +47,11 @@ function createContractListJson (contractDir: string, destinationDir: string): v
   }
 }
 
-function convertTypescriptFileToJson (inputFilePath: string, outputFilePath: string): void {
+function convertTypescriptFileToJson (
+  inputFilePath: string,
+  outputFilePath: string,
+  name: string
+): void {
   const sourceFile = ts.createSourceFile(
     inputFilePath,
     fs.readFileSync(inputFilePath).toString(),
@@ -99,18 +103,30 @@ function convertTypescriptFileToJson (inputFilePath: string, outputFilePath: str
   }
 
   parseNode(sourceFile);
-
-  fs.writeFileSync(outputFilePath, JSON.stringify(structures, null, 2));
+  const schemaData = structures;
+  const jsonData = {
+    [name]: {
+      schemaData
+    }
+  };
+  let existingData: Record<string, unknown> = {};
+  if (fs.existsSync(outputFilePath)) {
+    const existingContent = fs.readFileSync(outputFilePath, "utf8");
+    existingData = JSON.parse(existingContent);
+  }
+  // Merge existing data with new data
+  const mergedData = { ...existingData, ...jsonData };
+  fs.writeFileSync(outputFilePath, JSON.stringify(mergedData, null, 2));
 }
 function processFilesInFolder (folderPath: string, destPath: string): void {
   const files = fs.readdirSync(folderPath);
-
+  const fileName = "contractSchema";
+  const schemaDest = path.join(destPath, fileName + ".json");
   files.forEach((file) => {
     const filePath = path.join(folderPath, file);
-    const fileName = path.parse(file).name;
-    const schemaDest = path.join(destPath, fileName + ".json");
+    const name = path.parse(file).name;
     // console.log(schemaDest);
-    convertTypescriptFileToJson(filePath, schemaDest);
+    convertTypescriptFileToJson(filePath, schemaDest, name);
   });
 }
 
