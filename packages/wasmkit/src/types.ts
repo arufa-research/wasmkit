@@ -137,6 +137,13 @@ export interface Commands {
   schema: string
 }
 
+export interface Playground {
+  backgroundDark: string
+  backgroundLight: string
+  logoDark: string
+  logoLight: string
+}
+
 export type WasmKitNetworkAccountsConfig =
   | WasmKitNetworkHDAccountsConfig
   | WasmKitNetworkAccountConfig[];
@@ -299,6 +306,8 @@ export interface ResolvedConfig extends WasmKitUserConfig {
   networks: Networks
   localnetworks: LocalNetworks
   commands: Commands
+  playground: Playground
+
 }
 
 /**

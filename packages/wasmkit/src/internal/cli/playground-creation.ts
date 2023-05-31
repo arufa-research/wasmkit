@@ -5,7 +5,7 @@ import * as yaml from "js-yaml";
 import path from "path";
 import * as ts from "typescript";
 
-import { CounterData, Property, Structure } from "../../types";
+import { CounterData, Property, Structure, WasmkitRuntimeEnvironment } from "../../types";
 import { WasmkitError } from "../core/errors";
 import { ERRORS } from "../core/errors-list";
 import { initialize } from "./initialize-playground";
@@ -137,10 +137,29 @@ function createDir (dir: string): void {
     }
   });
 }
+
+function copyStaticFiles (
+  srcPath: string,
+  destinationPath: string,
+  env: WasmkitRuntimeEnvironment
+): void {
+  const data: any = env.config.playground;
+  for (const key in data) {
+    handleStaticFile(path.join(srcPath, data[key]), path.join(destinationPath), key);
+  }
+}
+
+function handleStaticFile (srcPath: string, destinationPath: string, name: string): void {
+  const fileExtension = path.extname(srcPath);
+  const Img = fs.readFileSync(srcPath);
+  const Dest = path.join(destinationPath, `${name}${fileExtension}`);
+  fs.writeFileSync(Dest, Img);
+}
 export async function createPlayground (
   projectName: string,
   templateName: string,
-  destination: string
+  destination: string,
+  env: WasmkitRuntimeEnvironment
   // eslint-disable-next-line
 ): Promise<any> {
   if (templateName !== undefined) {
@@ -166,38 +185,22 @@ export async function createPlayground (
     const playground = path.join(currDir, "playground");
     const playgroundDest = path.join(playground, "src");
     const ContractDir = path.join(playgroundDest, "contracts");
-    // fs.mkdir(ContractDir, { recursive: true }, (err) => {
-    //   if (err) {
-    //     console.error("Error creating folder:", err);
-    //   } else {
-    //     console.log("Folder created successfully!");
-    //   }
-    // });
     createDir(ContractDir);
-    const errDir = "Error creating folder:";
     const schemaDest = path.join(ContractDir, "schema");
     // const contracts = path.join(artifacts, "contracts");
     const instantiateDir = path.join(ContractDir, "instantiateInfo");
-
-    // fs.mkdir(instantiateDir, { recursive: true }, (err) => {
-    //   if (err) {
-    //     console.error(errDir, err);
-    //   }
-    // });
     createDir(instantiateDir);
 
     createContractListJson(checkpointsDir, instantiateDir);
     // createYamlToJson(checkpointsDir, instantiateDir);
 
     const contractsSchema = path.join(artifacts, "typescript_schema");
-
-    // fs.mkdir(schemaDest, { recursive: true }, (err) => {
-    //   if (err) {
-    //     console.error(errDir, err);
-    //   }
-    // });
     createDir(schemaDest);
     processFilesInFolder(contractsSchema, schemaDest);
+    const staticFilesDest = path.join(playgroundDest, "assets", "img");
+    const staticFilesSrc = path.join(currDir, "static");
+    copyStaticFiles(staticFilesSrc, staticFilesDest, env);
+    //  console.log(staticFilesDest);
     return;
   }
 
