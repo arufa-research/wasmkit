@@ -35,17 +35,22 @@ async function checkDir (destination: string, force: boolean): Promise<void> {
             "shouldProceedWithNonEmptyDir",
             `Do you want to proceed with the initialization?`
           )
+
         ]);
+        if (!responses.shouldProceedWithNonEmptyDir) {
+          console.log("Initialization cancelled");
+          process.exit();
+        }
       } catch (e) {
         if (e === "") {
           return;
         }
         throw e;
       }
-      if (!responses.shouldProceedWithNonEmptyDir) {
-        console.log("Initialization cancelled");
-        process.exit();
-      }
+      // if (!responses.shouldProceedWithNonEmptyDir) {
+      //   console.log("Initialization cancelled");
+      //   process.exit();
+      // }
     }
   }
 }
@@ -138,7 +143,7 @@ export async function initialize (
   let templatePath;
   [templatePath, templateName] = await checkTemplateExists(tempDirPath, templateName);
 
-  await copyTemplatetoDestination(templatePath, normalizedDestination, force);
+  await copyTemplatetoDestination(templatePath, normalizedDestination, true);
   tempDirCleanup(); // clean temporary directory
 
   console.log(
