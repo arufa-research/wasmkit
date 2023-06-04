@@ -37,20 +37,16 @@ async function checkDir (destination: string, force: boolean): Promise<void> {
           )
 
         ]);
-        if (!responses.shouldProceedWithNonEmptyDir) {
-          console.log("Initialization cancelled");
-          process.exit();
-        }
       } catch (e) {
         if (e === "") {
           return;
         }
         throw e;
       }
-      // if (!responses.shouldProceedWithNonEmptyDir) {
-      //   console.log("Initialization cancelled");
-      //   process.exit();
-      // }
+      if (!responses.shouldProceedWithNonEmptyDir) {
+        console.log("Initialization cancelled");
+        process.exit();
+      }
     }
   }
 }
