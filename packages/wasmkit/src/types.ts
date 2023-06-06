@@ -98,26 +98,26 @@ export interface WasmKitNetworkUserConfig {
   // TODO: check fees // add type
   fees?: Partial<{
     upload: {
-        amount: {
-            amount: string;
-            denom: string;
-        }[];
-        gas: string;
-    };
+      amount: Array<{
+        amount: string
+        denom: string
+      }>
+      gas: string
+    }
     init: {
-        amount: {
-            amount: string;
-            denom: string;
-        }[];
-        gas: string;
-    };
+      amount: Array<{
+        amount: string
+        denom: string
+      }>
+      gas: string
+    }
     exec: {
-        amount: {
-            amount: string;
-            denom: string;
-        }[];
-        gas: string;
-    };
+      amount: Array<{
+        amount: string
+        denom: string
+      }>
+      gas: string
+    }
   }>
 }
 

@@ -111,7 +111,7 @@ const networks = {
     },
   },
   juno_testnet: {
-    endpoint: 'https://rpc.uni.juno.deuslabs.fi/',
+    endpoint: 'https://rpc.uni.junonetworks./',
     chainId: 'uni-6',
     accounts: juno_testnet_accounts,
     fees: {
@@ -284,5 +284,11 @@ module.exports = {
   commands: {
     compile: "RUSTFLAGS='-C link-arg=-s' cargo build --release --target wasm32-unknown-unknown",
     schema: "cargo run --example schema",
-  }
+  },
+  playground: {
+    // backgroundDark: "temp/bgDark.png",
+    // backgroundLight:"temp/bgLight.png",
+    // logoDark:"temp/logoDark.png",
+    // logoLight: "temp/logoLight.png"
+  },
 };

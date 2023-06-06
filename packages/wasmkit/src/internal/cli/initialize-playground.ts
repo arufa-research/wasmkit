@@ -4,15 +4,48 @@ import fse from "fs-extra";
 import path from "path";
 
 import { copyTemplatetoDestination, fetchRepository, setUpTempDirectory } from "../util/fetch";
-import { createConfirmationPrompt, printSuggestedCommands } from "./playground-creation";
-const TEMPLATES_GIT_REMOTE = 'arufa-research/wasmkit-react-playground';
-const DEFAULT_TEMPLATE = 'playground';
+import {
+  createConfirmationPrompt,
+  installDependencies,
+  printSuggestedCommands
+} from "./playground-creation";
+
+const TEMPLATES_GIT_REMOTE = "arufa-research/wasmkit-react-playground";
+const DEFAULT_TEMPLATE = "playground";
+
+function isYarnProject (destination: string): boolean {
+  return fse.existsSync(path.join(destination, "yarn.lock"));
+}
 
 /**
  * Confirm if user wants to install project dependencies in template directory
  * @param name Selected Dapp template name
  * @param destination location to initialize template
  */
+async function confirmDepInstallation (name: string, destination: string): Promise<boolean> {
+  const { default: enquirer } = await import("enquirer");
+
+  let responses: {
+    shouldInstall: boolean
+  };
+
+  const packageManager = isYarnProject(destination) ? "yarn" : "npm";
+
+  try {
+    responses = await enquirer.prompt([
+      createConfirmationPrompt(
+        "shouldInstall",
+        `Do you want to install template ${name}'s dependencies with ${packageManager} ?`
+      )
+    ]);
+  } catch (e) {
+    if (e === "") {
+      return false;
+    }
+    throw e;
+  }
+  return responses.shouldInstall;
+}
 
 /**
  * Checks if the destination directory is non-empty and confirm if the user
@@ -57,28 +90,38 @@ async function checkDir (destination: string, force: boolean): Promise<void> {
  * @param templateName template name passed by user (bare if no template name is passed)
  */
 async function checkTemplateExists (
-  basePath: string, templateName: string
+  basePath: string,
+  templateName: string
 ): Promise<[string, string]> {
   const templatePath = path.join(basePath, templateName);
-  if (fse.existsSync(templatePath)) { return [templatePath, templateName]; } else {
-    console.log(chalk.red(`Error occurred: template "${templateName}" does not exist in ${TEMPLATES_GIT_REMOTE}`));
-    const prompt = new (enquirer as any).Select({ // eslint-disable-line  @typescript-eslint/no-explicit-any
-      name: 'Select an option',
-      message: 'Do you want to pick an existing template or exit?',
-      choices: ['Pick an existing template', 'exit']
+  if (fse.existsSync(templatePath)) {
+    return [templatePath, templateName];
+  } else {
+    console.log(
+      chalk.red(
+        `Error occurred: template "${templateName}" does not exist in ${TEMPLATES_GIT_REMOTE}`
+      )
+    );
+    const prompt = new (enquirer as any).Select({
+      // eslint-disable-line  @typescript-eslint/no-explicit-any
+      name: "Select an option",
+      message: "Do you want to pick an existing template or exit?",
+      choices: ["Pick an existing template", "exit"]
     });
     const response = await prompt.run();
-    if (response === 'exit') {
+    if (response === "exit") {
       console.log("Initialization cancelled");
       process.exit();
     } else {
-      const dApps = fse.readdirSync(basePath, { withFileTypes: true })
-        .filter(dirent => dirent.isDirectory())
-        .map(dirent => dirent.name);
+      const dApps = fse
+        .readdirSync(basePath, { withFileTypes: true })
+        .filter((dirent) => dirent.isDirectory())
+        .map((dirent) => dirent.name);
 
-      const dappsPrompt = new (enquirer as any).Select({ // eslint-disable-line  @typescript-eslint/no-explicit-any
-        name: 'dapps',
-        message: 'Pick a template',
+      const dappsPrompt = new (enquirer as any).Select({
+        // eslint-disable-line  @typescript-eslint/no-explicit-any
+        name: "dapps",
+        message: "Pick a template",
         choices: dApps
       });
       const selectedDapp = await dappsPrompt.run();
@@ -117,10 +160,17 @@ function _normalizeDestination (destination?: string): string {
  *     or not (if --force is not used).
  *  - If `--force` is used, then conflicting files are overwritten.
  */
-export async function initialize (
-  { force, projectName, templateName, destination }:
-  { force: boolean, projectName: string, templateName?: string, destination?: string }
-): Promise<void> {
+export async function initialize ({
+  force,
+  projectName,
+  templateName,
+  destination
+}: {
+  force: boolean
+  projectName: string
+  templateName?: string
+  destination?: string
+}): Promise<void> {
   const normalizedDestination = _normalizeDestination(destination);
   fse.ensureDirSync(normalizedDestination);
   await checkDir(normalizedDestination, force);
@@ -129,20 +179,56 @@ export async function initialize (
   const tempDirPath = tempDir.path;
   const tempDirCleanup = tempDir.cleanupCallback;
 
-  console.info(`* Fetching templates from ${TEMPLATES_GIT_REMOTE} *`);
+  console.info(
+    `\n Fetching templates from : `,
+    chalk.gray(`https://github.com/${TEMPLATES_GIT_REMOTE}`)
+  );
   await fetchRepository(TEMPLATES_GIT_REMOTE, tempDirPath);
   if (templateName === undefined) {
-    console.log(`Template name not passed: using default template ${chalk.green(DEFAULT_TEMPLATE)}`);
+    console.log(
+      `Template name not passed: using default template ${chalk.green(DEFAULT_TEMPLATE)}`
+    );
     templateName = DEFAULT_TEMPLATE;
   }
   let templatePath;
   [templatePath, templateName] = await checkTemplateExists(tempDirPath, templateName);
 
-  await copyTemplatetoDestination(templatePath, normalizedDestination, force);
+  await copyTemplatetoDestination(templatePath, normalizedDestination, true);
   tempDirCleanup(); // clean temporary directory
 
   console.log(
-    chalk.greenBright(`\n★ Template ${templateName} initialized in ${normalizedDestination} ★\n`));
+    chalk.greenBright(
+      `\n★ Template ${templateName} initialized in ${normalizedDestination} ★\n`
+    )
+  );
 
-  printSuggestedCommands(projectName);
+  // install dependencies in /templatePath
+  const shouldInstallDependencies = await confirmDepInstallation(
+    templateName,
+    normalizedDestination
+  );
+  const packageManager = isYarnProject(normalizedDestination) ? "yarn" : "npm";
+  let shouldShowInstallationInstructions;
+  // console.log(normalizedDestination);
+  if (shouldInstallDependencies) {
+    // console.log("1",normalizedDestination);
+    const installed = await installDependencies(
+      packageManager,
+      "install",
+      normalizedDestination
+    );
+    if (!installed) {
+      console.warn(chalk.red("Failed to install the sample project's dependencies"));
+    }
+    shouldShowInstallationInstructions = !installed;
+  } else {
+    shouldShowInstallationInstructions = true;
+  }
+
+  // if (shouldShowInstallationInstructions) {
+  //   console.log(
+  //     chalk.yellow(`\nInstall your project dependencies using '${packageManager} install'`)
+  //   );
+  // }
+  printSuggestedCommands(projectName, packageManager, shouldShowInstallationInstructions);
 }

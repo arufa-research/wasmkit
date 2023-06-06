@@ -1,23 +1,32 @@
 import chalk from "chalk";
+import { ExecException } from "child_process";
 import * as fs from "fs";
+import fsExtra from "fs-extra";
 import * as yaml from "js-yaml";
-// import fsExtra from "fs-extra";
+import os from "os";
 import path from "path";
 import * as ts from "typescript";
 
 import { CounterData, Property, Structure, WasmkitRuntimeEnvironment } from "../../types";
 import { WasmkitError } from "../core/errors";
 import { ERRORS } from "../core/errors-list";
+import { ExecutionMode, getExecutionMode } from "../core/execution-mode";
 import { initialize } from "./initialize-playground";
-export function printSuggestedCommands (projectName: string): void {
+export function printSuggestedCommands (
+  projectName: string,
+  packageManager: string,
+  shouldShowInstallationInstructions: boolean
+): void {
   const currDir = process.cwd();
   const projectPath = path.join(currDir, projectName);
   console.log(`Success! Created project at ${chalk.greenBright(projectPath)}.`);
 
   console.log(`Begin by typing:`);
-  console.log(`  cd ${projectName}`);
-  console.log(`  npm install`);
-  console.log(`  npm start`);
+  console.log(chalk.yellow(`  cd ${projectName}`));
+  if (shouldShowInstallationInstructions) {
+    console.log(chalk.yellow(`  ${packageManager} install`));
+  }
+  console.log(chalk.yellow(`  ${packageManager} start`));
 }
 
 function createContractListJson (contractDir: string, destinationDir: string): void {
@@ -29,11 +38,11 @@ function createContractListJson (contractDir: string, destinationDir: string): v
     const yamlFile = fs.readFileSync(filePath, "utf8");
     const yamlData = yaml.load(yamlFile) as CounterData;
     const codeId = yamlData.default.deployInfo.codeId;
-    const codeAddress = yamlData.default.instantiateInfo[0].contractAddress;
+    const contractAddress = yamlData.default.instantiateInfo[0].contractAddress;
     const jsonData = {
       [fileName]: {
         codeId,
-        codeAddress
+        contractAddress
       }
     };
     let existingData: Record<string, unknown> = {};
@@ -144,6 +153,7 @@ function copyStaticFiles (
   env: WasmkitRuntimeEnvironment
 ): void {
   const data: any = env.config.playground;
+  // console.log(data);
   for (const key in data) {
     handleStaticFile(path.join(srcPath, data[key]), path.join(destinationPath), key);
   }
@@ -198,7 +208,7 @@ export async function createPlayground (
     createDir(schemaDest);
     processFilesInFolder(contractsSchema, schemaDest);
     const staticFilesDest = path.join(playgroundDest, "assets", "img");
-    const staticFilesSrc = path.join(currDir, "static");
+    const staticFilesSrc = path.join(currDir);
     copyStaticFiles(staticFilesSrc, staticFilesDest, env);
     //  console.log(staticFilesDest);
     return;
@@ -207,7 +217,7 @@ export async function createPlayground (
   console.log(chalk.cyan(`★ Welcome to Junokit Playground v1.0 ★`));
   console.log("\n★", chalk.cyan("Project created"), "★\n");
 
-  printSuggestedCommands(projectName);
+  // printSuggestedCommands(projectName);
 }
 
 export function createConfirmationPrompt (
@@ -248,17 +258,61 @@ export function createConfirmationPrompt (
   };
 }
 
-// function isInstalled (dep: string): boolean {
-//   const packageJson = fsExtra.readJSONSync("package.json");
-//   const allDependencies = {
-//     ...packageJson.dependencies,
-//     ...packageJson.devDependencies,
-//     ...packageJson.optionalDependencies
-//   };
+function isYarnProject (): boolean {
+  return fsExtra.pathExistsSync("yarn.lock");
+}
 
-//   return dep in allDependencies;
-// }
+export async function installDependencies (
+  packageManager: string,
+  args: string,
+  location?: string
+): Promise<boolean> {
+  // const { spawn } = await import("child_process");
+  const { exec } = await import ("child_process");
+  // console.log(`${packageManager} ${args.join(" ")}`);
+  const command = packageManager + " " + args;
+  return await new Promise((resolve, reject) => {
+    const childProcess = exec(command, { cwd: location });
 
-// function isYarnProject (): boolean {
-//   return fsExtra.pathExistsSync("yarn.lock");
-// }
+    childProcess.stdout?.on("data", (data: string) => {
+      console.log(data.toString());
+    });
+
+    childProcess.stderr?.on("data", (data: string) => {
+      console.error(data.toString());
+    });
+
+    childProcess.on("close", (code: number) => {
+      if (code === 0) {
+        resolve(true);
+      } else {
+        reject(new Error(`Command failed with code: ${code}`));
+      }
+    });
+
+    childProcess.on("error", (error: ExecException) => {
+      console.error("Error executing command:", error);
+      reject(error);
+    });
+  });
+}
+
+async function npmInstallCmd (): Promise<string[]> {
+  const isGlobal = getExecutionMode() === ExecutionMode.EXECUTION_MODE_GLOBAL_INSTALLATION;
+
+  if (isYarnProject()) {
+    const cmd = ["yarn"];
+    if (isGlobal) {
+      cmd.push("global");
+    }
+    cmd.push("add", "--dev");
+    return cmd;
+  }
+
+  const npmInstall = ["npm", "install"];
+  if (isGlobal) {
+    npmInstall.push("--global");
+  }
+
+  return [...npmInstall, "--save-dev"];
+}
