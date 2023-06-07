@@ -150,7 +150,7 @@ function copyStaticFiles (
   if (env.config.playground) {
     const data: any = env.config.playground;
     for (const key in data) {
-      if (data[key] !== 0) {
+      if (data[key].length !== 0) {
         handleStaticFile(path.join(srcPath, data[key]), path.join(destinationPath), key);
       }
     }

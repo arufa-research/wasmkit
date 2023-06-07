@@ -93,7 +93,8 @@ async function checkTemplateExists (
   basePath: string,
   templateName: string
 ): Promise<[string, string]> {
-  const templatePath = path.join(basePath, templateName);
+  // const templatePath = path.join(basePath, templateName);
+  const templatePath = path.join(basePath);
   if (fse.existsSync(templatePath)) {
     return [templatePath, templateName];
   } else {

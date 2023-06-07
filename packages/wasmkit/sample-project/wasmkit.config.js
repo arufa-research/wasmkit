@@ -285,10 +285,4 @@ module.exports = {
     compile: "RUSTFLAGS='-C link-arg=-s' cargo build --release --target wasm32-unknown-unknown",
     schema: "cargo run --example schema",
   },
-  // playground: {
-  //   backgroundDark: "temp/bgDark.png",
-  //   backgroundLight:"temp/bgLight.png",
-  //   logoDark:"temp/logoDark.png",
-  //   logoLight: "temp/logoLight.png"
-  // },
 };
