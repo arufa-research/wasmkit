@@ -10,3 +10,4 @@ contracts/schema/
 # Node generated
 package-lock.json
 node_modules/
+temp/
