@@ -331,7 +331,7 @@ export interface ResolvedConfig extends WasmKitUserConfig {
   networks: Networks
   localnetworks: LocalNetworks
   commands: Commands
-  playground: Playground
+  playground?: Playground
 
 }
 

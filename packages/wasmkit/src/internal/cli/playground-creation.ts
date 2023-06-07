@@ -147,9 +147,13 @@ function copyStaticFiles (
   destinationPath: string,
   env: WasmkitRuntimeEnvironment
 ): void {
-  const data: any = env.config.playground;
-  for (const key in data) {
-    handleStaticFile(path.join(srcPath, data[key]), path.join(destinationPath), key);
+  if (env.config.playground) {
+    const data: any = env.config.playground;
+    for (const key in data) {
+      if (data[key] !== 0) {
+        handleStaticFile(path.join(srcPath, data[key]), path.join(destinationPath), key);
+      }
+    }
   }
 }
 
@@ -163,7 +167,6 @@ export async function createPlayground (
   projectName: string,
   templateName: string,
   destination: string,
-  withParam: boolean,
   env: WasmkitRuntimeEnvironment
   // eslint-disable-next-line
 ): Promise<any> {
@@ -198,7 +201,7 @@ export async function createPlayground (
     const contractsSchema = path.join(artifacts, "typescript_schema");
     createDir(schemaDest);
     processFilesInFolder(contractsSchema, schemaDest);
-    if (withParam) {
+    if (env.config.playground) {
       const staticFilesDest = path.join(playgroundDest, "assets", "img");
       const staticFilesSrc = path.join(currDir);
       copyStaticFiles(staticFilesSrc, staticFilesDest, env);
@@ -246,17 +249,12 @@ export function createConfirmationPrompt (
     }
   };
 }
-
-function isYarnProject (): boolean {
-  return fsExtra.pathExistsSync("yarn.lock");
-}
-
 export async function installDependencies (
   packageManager: string,
   args: string,
   location?: string
 ): Promise<boolean> {
-  const { exec } = await import ("child_process");
+  const { exec } = await import("child_process");
   const command = packageManager + " " + args;
   return await new Promise((resolve, reject) => {
     const childProcess = exec(command, { cwd: location });
