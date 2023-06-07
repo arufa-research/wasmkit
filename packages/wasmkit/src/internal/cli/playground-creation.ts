@@ -3,14 +3,12 @@ import { ExecException } from "child_process";
 import * as fs from "fs";
 import fsExtra from "fs-extra";
 import * as yaml from "js-yaml";
-import os from "os";
 import path from "path";
 import * as ts from "typescript";
 
 import { CounterData, Property, Structure, WasmkitRuntimeEnvironment } from "../../types";
 import { WasmkitError } from "../core/errors";
 import { ERRORS } from "../core/errors-list";
-import { ExecutionMode, getExecutionMode } from "../core/execution-mode";
 import { initialize } from "./initialize-playground";
 export function printSuggestedCommands (
   projectName: string,
@@ -50,7 +48,6 @@ function createContractListJson (contractDir: string, destinationDir: string): v
       const existingContent = fs.readFileSync(dest, "utf8");
       existingData = JSON.parse(existingContent);
     }
-    // Merge existing data with new data
     const mergedData = { ...existingData, ...jsonData };
     fs.writeFileSync(dest, JSON.stringify(mergedData, null, 2));
   }
@@ -123,7 +120,6 @@ function convertTypescriptFileToJson (
     const existingContent = fs.readFileSync(outputFilePath, "utf8");
     existingData = JSON.parse(existingContent);
   }
-  // Merge existing data with new data
   const mergedData = { ...existingData, ...jsonData };
   fs.writeFileSync(outputFilePath, JSON.stringify(mergedData, null, 2));
 }
@@ -134,7 +130,6 @@ function processFilesInFolder (folderPath: string, destPath: string): void {
   files.forEach((file) => {
     const filePath = path.join(folderPath, file);
     const name = path.parse(file).name;
-    // console.log(schemaDest);
     convertTypescriptFileToJson(filePath, schemaDest, name);
   });
 }
@@ -153,7 +148,6 @@ function copyStaticFiles (
   env: WasmkitRuntimeEnvironment
 ): void {
   const data: any = env.config.playground;
-  // console.log(data);
   for (const key in data) {
     handleStaticFile(path.join(srcPath, data[key]), path.join(destinationPath), key);
   }
@@ -169,6 +163,7 @@ export async function createPlayground (
   projectName: string,
   templateName: string,
   destination: string,
+  withParam: boolean,
   env: WasmkitRuntimeEnvironment
   // eslint-disable-next-line
 ): Promise<any> {
@@ -197,27 +192,21 @@ export async function createPlayground (
     const ContractDir = path.join(playgroundDest, "contracts");
     createDir(ContractDir);
     const schemaDest = path.join(ContractDir, "schema");
-    // const contracts = path.join(artifacts, "contracts");
     const instantiateDir = path.join(ContractDir, "instantiateInfo");
     createDir(instantiateDir);
-
     createContractListJson(checkpointsDir, instantiateDir);
-    // createYamlToJson(checkpointsDir, instantiateDir);
-
     const contractsSchema = path.join(artifacts, "typescript_schema");
     createDir(schemaDest);
     processFilesInFolder(contractsSchema, schemaDest);
-    const staticFilesDest = path.join(playgroundDest, "assets", "img");
-    const staticFilesSrc = path.join(currDir);
-    copyStaticFiles(staticFilesSrc, staticFilesDest, env);
-    //  console.log(staticFilesDest);
+    if (withParam) {
+      const staticFilesDest = path.join(playgroundDest, "assets", "img");
+      const staticFilesSrc = path.join(currDir);
+      copyStaticFiles(staticFilesSrc, staticFilesDest, env);
+    }
     return;
   }
-
   console.log(chalk.cyan(`★ Welcome to Junokit Playground v1.0 ★`));
   console.log("\n★", chalk.cyan("Project created"), "★\n");
-
-  // printSuggestedCommands(projectName);
 }
 
 export function createConfirmationPrompt (
@@ -267,9 +256,7 @@ export async function installDependencies (
   args: string,
   location?: string
 ): Promise<boolean> {
-  // const { spawn } = await import("child_process");
   const { exec } = await import ("child_process");
-  // console.log(`${packageManager} ${args.join(" ")}`);
   const command = packageManager + " " + args;
   return await new Promise((resolve, reject) => {
     const childProcess = exec(command, { cwd: location });
@@ -295,24 +282,4 @@ export async function installDependencies (
       reject(error);
     });
   });
-}
-
-async function npmInstallCmd (): Promise<string[]> {
-  const isGlobal = getExecutionMode() === ExecutionMode.EXECUTION_MODE_GLOBAL_INSTALLATION;
-
-  if (isYarnProject()) {
-    const cmd = ["yarn"];
-    if (isGlobal) {
-      cmd.push("global");
-    }
-    cmd.push("add", "--dev");
-    return cmd;
-  }
-
-  const npmInstall = ["npm", "install"];
-  if (isGlobal) {
-    npmInstall.push("--global");
-  }
-
-  return [...npmInstall, "--save-dev"];
 }

@@ -111,7 +111,7 @@ const networks = {
     },
   },
   juno_testnet: {
-    endpoint: 'https://rpc.uni.junonetworks./',
+    endpoint: 'https://rpc.uni.junonetwork.io/',
     chainId: 'uni-6',
     accounts: juno_testnet_accounts,
     fees: {
@@ -247,8 +247,8 @@ const networks = {
 
 module.exports = {
   networks: {
-    default: networks.neutron_testnet,
-    testnet: networks.neutron_testnet,
+    default: networks.juno_testnet,
+    testnet: networks.juno_testnet,
     localnet: networks.juno_localnet,
     mainnet: networks.neutron_mainnet,
   },
@@ -286,9 +286,9 @@ module.exports = {
     schema: "cargo run --example schema",
   },
   playground: {
-    // backgroundDark: "temp/bgDark.png",
-    // backgroundLight:"temp/bgLight.png",
-    // logoDark:"temp/logoDark.png",
-    // logoLight: "temp/logoLight.png"
+    backgroundDark: "temp/background.jpg",
+    backgroundLight:"temp/bgLight.png",
+    logoDark:"temp/logoDark.png",
+    logoLight: "temp/logoLight.png"
   },
 };

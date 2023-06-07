@@ -209,9 +209,7 @@ export async function initialize ({
   );
   const packageManager = isYarnProject(normalizedDestination) ? "yarn" : "npm";
   let shouldShowInstallationInstructions;
-  // console.log(normalizedDestination);
   if (shouldInstallDependencies) {
-    // console.log("1",normalizedDestination);
     const installed = await installDependencies(
       packageManager,
       "install",
@@ -224,11 +222,5 @@ export async function initialize ({
   } else {
     shouldShowInstallationInstructions = true;
   }
-
-  // if (shouldShowInstallationInstructions) {
-  //   console.log(
-  //     chalk.yellow(`\nInstall your project dependencies using '${packageManager} install'`)
-  //   );
-  // }
   printSuggestedCommands(projectName, packageManager, shouldShowInstallationInstructions);
 }

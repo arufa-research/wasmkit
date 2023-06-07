@@ -248,7 +248,7 @@ Please check that the configured keypair are correct.`,
     },
     ARTIFACTS_NOT_FOUND: {
       number: 26,
-      message: "No artifacts directory found.. Try to compile contracts first",
+      message: "No artifacts directory found. Try to compile contracts first.",
       title: "Artifacts Directory Not Found.",
       description: `There is no artifacts directory possibly due to error in compilation.`,
       shouldBeReported: false
@@ -297,7 +297,7 @@ Please check that the configured keypair are correct.`,
     },
     CHECKPOINTS_NOT_FOUND: {
       number: 33,
-      message: 'Checkpoint directory is missing. First initiate the contract by running deployed script file',
+      message: 'Checkpoint directory is missing. First initiate the contract by running deployed script file.',
       title: 'Checkpoint info not present.',
       description: `You are trying to create playground without compiling the contracts.
 

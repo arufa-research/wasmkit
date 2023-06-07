@@ -245,6 +245,7 @@ export interface Config {
   paths?: UserPaths
   mocha?: Mocha.MochaOptions
   commands?: Commands
+  playground?: Playground
 }
 
 export interface WasmKitUserConfig {
@@ -255,6 +256,7 @@ export interface WasmKitUserConfig {
   commands?: Commands
   mocha?: Mocha.MochaOptions
   docker?: DockerConfig
+  playground?: Playground
 }
 
 export interface WasmKitConfig {
@@ -265,6 +267,7 @@ export interface WasmKitConfig {
   commands: Commands
   mocha: Mocha.MochaOptions
   docker: DockerConfig
+  playground: Playground
 }
 
 // Plugins config functionality
