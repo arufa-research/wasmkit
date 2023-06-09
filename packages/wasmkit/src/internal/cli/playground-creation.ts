@@ -1,7 +1,6 @@
 import chalk from "chalk";
 import { ExecException } from "child_process";
 import * as fs from "fs";
-import fsExtra from "fs-extra";
 import * as yaml from "js-yaml";
 import path from "path";
 import * as ts from "typescript";
@@ -27,22 +26,41 @@ export function printSuggestedCommands (
   console.log(chalk.yellow(`  ${packageManager} start`));
 }
 
-function createContractListJson (contractDir: string, destinationDir: string): void {
+function createContractListJson (
+  contractDir: string,
+  destinationDir: string,
+  env: WasmkitRuntimeEnvironment
+): void {
   const files = fs.readdirSync(contractDir); // Get an array of all files in the directory
   const dest = path.join(destinationDir, "contractList.json");
   for (const file of files) {
     const fileName = path.parse(file).name;
     const filePath = path.join(contractDir, file);
     const yamlFile = fs.readFileSync(filePath, "utf8");
-    const yamlData = yaml.load(yamlFile) as CounterData;
-    const codeId = yamlData.default.deployInfo.codeId;
-    const contractAddress = yamlData.default.instantiateInfo[0].contractAddress;
-    const jsonData = {
-      [fileName]: {
-        codeId,
-        contractAddress
+    const yamlData = yaml.load(yamlFile) as Record<any, any>;
+    const temp = Object.keys(yamlData);
+    console.log(yamlData);
+    const jsonData: Record<any, any> = {};
+    console.log(env.config.networks);
+    temp.forEach((keys) => {
+      const chainId = env.config.networks[keys].chainId;
+      const codeId = yamlData[keys].deployInfo.codeId;
+      const contractAddress = yamlData[keys].instantiateInfo[0].contractAddress;
+      const data: Record<string, any> = {
+        [keys]: {
+          chainId,
+          codeId,
+          contractAddress
+        }
+      };
+      if (jsonData[fileName]) {
+        // Merge existing data with new data
+        jsonData[fileName] = { ...jsonData[fileName], ...data };
+      } else {
+        // Add new data
+        jsonData[fileName] = data;
       }
-    };
+    });
     let existingData: Record<string, unknown> = {};
     if (fs.existsSync(dest)) {
       const existingContent = fs.readFileSync(dest, "utf8");
@@ -197,7 +215,7 @@ export async function createPlayground (
     const schemaDest = path.join(ContractDir, "schema");
     const instantiateDir = path.join(ContractDir, "instantiateInfo");
     createDir(instantiateDir);
-    createContractListJson(checkpointsDir, instantiateDir);
+    createContractListJson(checkpointsDir, instantiateDir, env);
     const contractsSchema = path.join(artifacts, "typescript_schema");
     createDir(schemaDest);
     processFilesInFolder(contractsSchema, schemaDest);

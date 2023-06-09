@@ -248,7 +248,7 @@ const networks = {
 module.exports = {
   networks: {
     default: networks.juno_testnet,
-    testnet: networks.juno_testnet,
+    testnet: networks.neutron_testnet,
     localnet: networks.juno_localnet,
     mainnet: networks.neutron_mainnet,
   },
