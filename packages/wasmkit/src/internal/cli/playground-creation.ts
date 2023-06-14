@@ -1,11 +1,13 @@
 import chalk from "chalk";
 import { ExecException } from "child_process";
+import { error } from "console";
 import * as fs from "fs";
 import * as yaml from "js-yaml";
 import path from "path";
 import * as ts from "typescript";
 
-import { CounterData, Property, Structure, WasmkitRuntimeEnvironment } from "../../types";
+import { loadCheckpoint } from "../../lib/checkpoints";
+import { CheckpointInfo, ContractListInfo, Property, Structure, WasmkitRuntimeEnvironment } from "../../types";
 import { WasmkitError } from "../core/errors";
 import { ERRORS } from "../core/errors-list";
 import { initialize } from "./initialize-playground";
@@ -36,22 +38,19 @@ function createContractListJson (
   for (const file of files) {
     const fileName = path.parse(file).name;
     const filePath = path.join(contractDir, file);
-    const yamlFile = fs.readFileSync(filePath, "utf8");
-    const yamlData = yaml.load(yamlFile) as Record<any, any>;
+    const yamlData = loadCheckpoint(filePath);
     const temp = Object.keys(yamlData);
-    console.log(yamlData);
-    const jsonData: Record<any, any> = {};
-    console.log(env.config.networks);
+    console.log("yamldata", yamlData);
+    const jsonData: Record<string, Record<string, ContractListInfo>> = {};
     temp.forEach((keys) => {
-      const chainId = env.config.networks[keys].chainId;
-      const codeId = yamlData[keys].deployInfo.codeId;
-      const contractAddress = yamlData[keys].instantiateInfo[0].contractAddress;
-      const data: Record<string, any> = {
-        [keys]: {
-          chainId,
-          codeId,
-          contractAddress
-        }
+      const info: CheckpointInfo = yamlData[keys];
+      const checkpointInf: ContractListInfo = {
+        chainId: env.config.networks[keys].chainId,
+        codeId: info.deployInfo?.codeId,
+        contractAddress: info.instantiateInfo?.[0].contractAddress
+      };
+      const data: Record<string, ContractListInfo> = {
+        [keys]: checkpointInf
       };
       if (jsonData[fileName]) {
         // Merge existing data with new data

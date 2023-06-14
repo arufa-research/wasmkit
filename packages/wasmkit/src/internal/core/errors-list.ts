@@ -303,6 +303,24 @@ Please check that the configured keypair are correct.`,
 
       You can learn how to use WasmKit by reading the [Getting Started guide](../getting-started).`,
       shouldBeReported: false
+    },
+    INSTALLATION_ERROR: {
+      number: 34,
+      message: 'There is error in  installation dependencies',
+      title: 'Error in installation dependencies',
+      description: `
+
+      You can learn how to use WasmKit by reading the [Getting Started guide](../getting-started).`,
+      shouldBeReported: false
+    },
+    TEMPLATE_NOT_EXIST: {
+      number: 35,
+      message: 'There is not any template with provided name. Kindly recheck provided name.',
+      title: 'Template not exist with this name',
+      description: `
+
+      You can learn how to use WasmKit by reading the [Getting Started guide](../getting-started).`,
+      shouldBeReported: false
     }
   },
   NETWORK: {

@@ -1,17 +1,15 @@
 import chalk from "chalk";
-import enquirer from "enquirer";
+import enquirer, { prompt } from "enquirer";
 import fse from "fs-extra";
 import path from "path";
 
+import { DEFAULT_TEMPLATE_PLAYGROUND, TEMPLATES_GIT_REMOTE_PLAYGROUND } from "../../lib/constants";
 import { copyTemplatetoDestination, fetchRepository, setUpTempDirectory } from "../util/fetch";
 import {
   createConfirmationPrompt,
   installDependencies,
   printSuggestedCommands
 } from "./playground-creation";
-
-const TEMPLATES_GIT_REMOTE = "arufa-research/wasmkit-react-playground";
-const DEFAULT_TEMPLATE = "playground";
 
 function isYarnProject (destination: string): boolean {
   return fse.existsSync(path.join(destination, "yarn.lock"));
@@ -23,8 +21,6 @@ function isYarnProject (destination: string): boolean {
  * @param destination location to initialize template
  */
 async function confirmDepInstallation (name: string, destination: string): Promise<boolean> {
-  const { default: enquirer } = await import("enquirer");
-
   let responses: {
     shouldInstall: boolean
   };
@@ -93,14 +89,13 @@ async function checkTemplateExists (
   basePath: string,
   templateName: string
 ): Promise<[string, string]> {
-  // const templatePath = path.join(basePath, templateName);
   const templatePath = path.join(basePath);
   if (fse.existsSync(templatePath)) {
     return [templatePath, templateName];
   } else {
     console.log(
       chalk.red(
-        `Error occurred: template "${templateName}" does not exist in ${TEMPLATES_GIT_REMOTE}`
+        `Error occurred: template "${templateName}" does not exist in ${TEMPLATES_GIT_REMOTE_PLAYGROUND}`
       )
     );
     const prompt = new (enquirer as any).Select({
@@ -181,15 +176,15 @@ export async function initialize ({
   const tempDirCleanup = tempDir.cleanupCallback;
 
   console.info(
-    `\n Fetching templates from : `,
-    chalk.gray(`https://github.com/${TEMPLATES_GIT_REMOTE}`)
+    `\nFetching templates from:`,
+    chalk.gray(`https://github.com/${TEMPLATES_GIT_REMOTE_PLAYGROUND}`)
   );
-  await fetchRepository(TEMPLATES_GIT_REMOTE, tempDirPath);
+  await fetchRepository(TEMPLATES_GIT_REMOTE_PLAYGROUND, tempDirPath);
   if (templateName === undefined) {
     console.log(
-      `Template name not passed: using default template ${chalk.green(DEFAULT_TEMPLATE)}`
+      `Template name not passed: using default template ${chalk.green(DEFAULT_TEMPLATE_PLAYGROUND)}`
     );
-    templateName = DEFAULT_TEMPLATE;
+    templateName = DEFAULT_TEMPLATE_PLAYGROUND;
   }
   let templatePath;
   [templatePath, templateName] = await checkTemplateExists(tempDirPath, templateName);

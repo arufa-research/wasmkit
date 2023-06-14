@@ -500,9 +500,8 @@ export interface Structure {
   properties?: Property[]
 }
 
-export interface CounterData {
-  default: {
-    deployInfo: DeployInfo
-    instantiateInfo: InstantiateInfo[]
-  }
+export interface ContractListInfo {
+  chainId: string |undefined
+  codeId: number | undefined
+  contractAddress: string |undefined
 }
