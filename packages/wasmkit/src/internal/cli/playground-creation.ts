@@ -40,7 +40,6 @@ function createContractListJson (
     const filePath = path.join(contractDir, file);
     const yamlData = loadCheckpoint(filePath);
     const temp = Object.keys(yamlData);
-    console.log("yamldata", yamlData);
     const jsonData: Record<string, Record<string, ContractListInfo>> = {};
     temp.forEach((keys) => {
       const info: CheckpointInfo = yamlData[keys];
