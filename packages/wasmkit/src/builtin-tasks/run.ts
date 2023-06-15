@@ -3,6 +3,7 @@ import fsExtra from "fs-extra";
 import path from "path";
 import * as ts from "typescript";
 
+import { createContractListJson, createDir, processFilesInFolder } from "../internal/cli/playground-creation";
 import { task } from "../internal/core/config/config-env";
 import { WasmkitError } from "../internal/core/errors";
 import { ERRORS } from "../internal/core/errors-list";
@@ -12,7 +13,6 @@ import { buildTsScripts } from "../lib/compile/scripts";
 import { assertDirChildren } from "../lib/files";
 import { WasmkitRuntimeEnvironment } from "../types";
 import { TASK_RUN } from "./task-names";
-
 interface Input {
   scripts: string[]
   skipCheckpoints: boolean
@@ -94,6 +94,19 @@ async function executeRunTask (
     logDebugTag,
     false
   );
+
+  // TODO: checkpoint update in playground
+  const playgroundPath = path.join(process.cwd(), "playground");
+  if (await fsExtra.pathExists(playgroundPath)) {
+    const checkpointsDir = path.join(process.cwd(), "artifacts", "checkpoints");
+    const schemaDir = path.join(process.cwd(), "artifacts", "typescript_schema");
+    const contractListPath = path.join(playgroundPath, "src", "contracts", "instantiateInfo");
+    const contractSchemaPath = path.join(playgroundPath, "src", "contracts", "schema");
+    createDir(contractListPath);
+    createDir(contractSchemaPath);
+    createContractListJson(checkpointsDir, contractListPath, runtimeEnv);
+    processFilesInFolder(schemaDir, contractSchemaPath);
+  }
 }
 
 export default function (): void {

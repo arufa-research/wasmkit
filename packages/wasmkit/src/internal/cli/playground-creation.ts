@@ -28,7 +28,7 @@ export function printSuggestedCommands (
   console.log(chalk.yellow(`  ${packageManager} start`));
 }
 
-function createContractListJson (
+export function createContractListJson (
   contractDir: string,
   destinationDir: string,
   env: WasmkitRuntimeEnvironment
@@ -69,7 +69,7 @@ function createContractListJson (
   }
 }
 
-function convertTypescriptFileToJson (
+export function convertTypescriptFileToJson (
   inputFilePath: string,
   outputFilePath: string,
   name: string
@@ -139,7 +139,7 @@ function convertTypescriptFileToJson (
   const mergedData = { ...existingData, ...jsonData };
   fs.writeFileSync(outputFilePath, JSON.stringify(mergedData, null, 2));
 }
-function processFilesInFolder (folderPath: string, destPath: string): void {
+export function processFilesInFolder (folderPath: string, destPath: string): void {
   const files = fs.readdirSync(folderPath);
   const fileName = "contractSchema";
   const schemaDest = path.join(destPath, fileName + ".json");
@@ -150,7 +150,7 @@ function processFilesInFolder (folderPath: string, destPath: string): void {
   });
 }
 
-function createDir (dir: string): void {
+export function createDir (dir: string): void {
   fs.mkdir(dir, { recursive: true }, (err) => {
     if (err) {
       console.error("error", err);
