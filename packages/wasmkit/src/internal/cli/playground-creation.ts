@@ -28,6 +28,7 @@ export function printSuggestedCommands (
   console.log(chalk.yellow(`  ${packageManager} start`));
 }
 
+
 export function createContractListJson (
   contractDir: string,
   destinationDir: string,
