@@ -192,7 +192,7 @@ function handleStaticFile (srcPath: string, destinationPath: string, name: strin
 function handleSocials (
   destinationPath: string,
   env: WasmkitRuntimeEnvironment): void {
-  const jsonData: Record<string, string> = {};
+  const jsonData: Record<string, unknown> = {};
   if (env.config.playground?.title) {
     jsonData.title = env.config.playground.title;
   }
@@ -200,14 +200,16 @@ function handleSocials (
     jsonData.tagline = env.config.playground.tagline;
   }
   if (env.config.playground?.socials) {
+    const jsonD: Record<string, string> = {};
     const data: any = env.config.playground.socials;
     for (const key in data) {
       if (data[key].length !== 0) {
-        jsonData[key] = data[key];
+        jsonD[key] = data[key];
       }
     }
+    jsonData.socials = jsonD;
   }
-  fs.writeFileSync(path.join(destinationPath, "social.json"), JSON.stringify(jsonData, null, 2));
+  fs.writeFileSync(path.join(destinationPath, "user_data.json"), JSON.stringify(jsonData, null, 2));
 }
 export async function createPlayground (
   projectName: string,
@@ -246,7 +248,7 @@ export async function createPlayground (
     const schemaDest = path.join(ContractDir, "schema");
     const instantiateDir = path.join(ContractDir, "instantiateInfo");
     createDir(instantiateDir);
-    const socialDir = path.join(ContractDir, "socials");
+    const socialDir = path.join(ContractDir, "data");
     createDir(socialDir);
     createContractListJson(checkpointsDir, instantiateDir, env);
     createDir(schemaDest);
